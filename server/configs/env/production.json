@@ -1,0 +1,16 @@
+{
+	"host": "localhost",
+	"port": 3000,
+	"webHost": "http://localhost:3000",
+	"dbURI": "mongodb://localhost/wp-api",
+	"google":{
+		"client_id":"510733714199-l4li7r7gmj7g9uducq6ve07425an07jq.apps.googleusercontent.com",
+		"client_secret":"AJVmEVxaKDtBwaIEiMOhhLVu",
+		"project_id":"wpapi-183809",
+		"auth_uri":"https://accounts.google.com/o/oauth2/auth",
+		"token_uri":"https://accounts.google.com/o/oauth2/token",
+		"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+		"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]
+	},
+	"timezone": "Asia/Kathmandu"
+}

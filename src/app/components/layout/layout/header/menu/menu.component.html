@@ -1,0 +1,12 @@
+<ul>
+	<li *ngFor="let menuItem of menuItems">
+		<a *ngIf="menuItem.toRedirect === false; else toRedirectRoute" [routerLink]="[menuItem.routerLink]">
+			{{ menuItem.name }}
+		</a>
+		<ng-template #toRedirectRoute>
+			<a>
+				{{ menuItem.name }}
+			</a>
+		</ng-template>
+	</li>
+</ul>

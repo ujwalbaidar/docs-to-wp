@@ -1,0 +1,28 @@
+{
+	"host": "localhost",
+	"port": 3000,
+	"webHost": "http://localhost:3000",
+	"dbURI": "mongodb://localhost/wp-api",
+	"google":{
+		"client_id":"510733714199-l4li7r7gmj7g9uducq6ve07425an07jq.apps.googleusercontent.com",
+		"client_secret":"AJVmEVxaKDtBwaIEiMOhhLVu",
+		"redirect_url": "http://localhost:3000/app/google-auth/action/validate/loginType/google",
+		"oAuthAccess": {
+			"access_type":"offline", 
+			"scope": [
+				"openid", 
+				"email", 
+				"https://www.googleapis.com/auth/userinfo.profile",
+				"https://www.googleapis.com/auth/drive.readonly"
+			],
+			"approval_prompt": "force",
+			"response_type": "code"
+		}
+	},
+	"wp":{
+		"client_id": "55795",
+		"client_secret": "aFe6JSWIJKir8ClGRzpEQloiCAaiLwLaBYp9hyUzRYMQs7A91T9uWd4dsKGKwOps",
+		"redirect_url": "http://localhost:3000/app/wp-auth/action/validate/loginType/wp"
+	},
+	"timezone": "Asia/Kathmandu"
+}
