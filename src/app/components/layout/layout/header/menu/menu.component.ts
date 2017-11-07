@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthsService } from '../../../../../shared/service/auths.service';
 
 @Component({
 	selector: 'app-menu',
@@ -8,9 +9,10 @@ import { Component, OnInit } from '@angular/core';
 export class MenuComponent implements OnInit {
 	public menuItems: any;
 
-	constructor() { }
+	constructor(public authsService: AuthsService) { }
 
 	ngOnInit() {
+		this.getAuthUrls();
 		this.getHeaderMenus();
 	}
 
@@ -25,14 +27,24 @@ export class MenuComponent implements OnInit {
 				name: 'Pricing',
 				routerLink: '/pricing',
 				toRedirect: false
-			},
-			{
-				name: 'Login',
-				routerLink: '/login',
-				toRedirect: false
 			}
 		];
 
 		this.menuItems = menuItems;
+	}
+
+	getAuthUrls(){
+		this.authsService.getAuthUrls()
+			.subscribe(authUrlObj=>{
+				if(authUrlObj.success === true){
+					this.menuItems.push({
+						name: 'Login',
+						routerLink: authUrlObj.data.google,
+						toRedirect: true
+					})
+				}
+			}, authUrlErr=>{
+
+			});
 	}
 }

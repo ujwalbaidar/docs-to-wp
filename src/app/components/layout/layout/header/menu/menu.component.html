@@ -4,7 +4,8 @@
 			{{ menuItem.name }}
 		</a>
 		<ng-template #toRedirectRoute>
-			<a>
+			<!-- <a href="{{authUrls.google}}">Google Login</a> -->
+			<a href="{{menuItem.routerLink}}">
 				{{ menuItem.name }}
 			</a>
 		</ng-template>

@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { RoutesModule } from './routes/routes.module';
 
 import { LayoutModule } from './components/layout/layout.module';
+import { AdminLayoutModule } from './components/admin-layout/admin-layout.module';
 import { SharedModule } from './shared/shared.module';
 import { HttpModule } from '@angular/http';
 
@@ -18,6 +19,7 @@ import { HttpModule } from '@angular/http';
 		HttpModule,
 		RoutesModule,
 		LayoutModule,
+		AdminLayoutModule,
 		BrowserAnimationsModule,
 		SharedModule
 	],

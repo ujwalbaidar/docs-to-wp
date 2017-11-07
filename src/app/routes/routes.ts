@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LayoutComponent } from '../components/layout/layout/layout.component';
+import { AdminLayoutComponent } from '../components/admin-layout/admin-layout/admin-layout.component';
 
 export const routes = [
 	{
@@ -15,6 +16,16 @@ export const routes = [
 			{ path: 'app/google-auth/action/:action/loginType/:loginType', loadChildren: '../components/google-auths/google-auths.module#GoogleAuthsModule' },
 		]
 	},
+	{
+		path: 'app',
+		component: AdminLayoutComponent,
+		children: [
+			{ path: '', redirectTo: 'settings', pathMatch: 'full' },
+			{ path: 'settings', loadChildren: '../components/settings/settings.module#SettingsModule' },
+			{ path: 'exports', loadChildren: '../components/exports/exports.module#ExportsModule' },
+			{ path: 'documents', loadChildren: '../components/documents/documents.module#DocumentsModule' },
+		]
+	}
 	// {
 	// 	path: '**', 
 	// 	redirectTo: 'home'
