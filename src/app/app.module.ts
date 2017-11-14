@@ -9,6 +9,7 @@ import { LayoutModule } from './components/layout/layout.module';
 import { AdminLayoutModule } from './components/admin-layout/admin-layout.module';
 import { SharedModule } from './shared/shared.module';
 import { HttpModule } from '@angular/http';
+import { FormsModule }   from '@angular/forms';
 
 @NgModule({
 	declarations: [
@@ -21,7 +22,8 @@ import { HttpModule } from '@angular/http';
 		LayoutModule,
 		AdminLayoutModule,
 		BrowserAnimationsModule,
-		SharedModule
+		SharedModule,
+		FormsModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]
