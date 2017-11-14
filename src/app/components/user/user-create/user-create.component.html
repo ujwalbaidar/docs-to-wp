@@ -1,0 +1,44 @@
+<div class="new-user-settings">
+	<div>
+		<h3>Connect Your WordpressSite</h3>
+	</div>
+	<div>
+		<h4>Get Started: Link WpEngine To Your WordPress Site</h4>
+		<div class="user-form-container">
+			<form (ngSubmit)="submitWpUser()" #wpUserForm="ngForm" novalidate>
+				<div>
+					<p>Provide the URL of you blog below</p>
+				</div>
+				<div>
+					<p>
+						This means the URL where you would typically log in to your Wordpress Admin Panel but without the /wp-admin portion. So if you typically log into http://www.growandconvert.com/wp-admin, only put http://www.growandconvert.com below.
+					</p>
+				</div>
+				<div>
+					<mat-form-field floatPlaceholder="always">
+						<input name="wpUserUrl" [(ngModel)]="user.url" #wpUserUrl="ngModel" matInput placeholder="URL">
+					</mat-form-field>
+				</div>
+				<div>
+					<strong>WordPress Login</strong>
+				</div>
+				<div>
+					<p>Enter your WordPress username and password (i.e. what you use to login at http://yourblog.com/wp-admin). Make sure you have "Author" level permissions or above (otherwise Wordable won't work).</p>
+				</div>
+				<div>
+					<mat-form-field floatPlaceholder="always">
+						<input name="wpUserName" [(ngModel)]="user.userName" #wpUserName="ngModel" matInput placeholder="Username">
+					</mat-form-field>
+				</div>
+				<div>
+					<mat-form-field floatPlaceholder="always">
+						<input name="wpUserPassword" [(ngModel)]="user.password" #wpUserPassword="ngModel" matInput type="password" placeholder="Password">
+					</mat-form-field>
+				</div>
+				<div>
+					<button mat-raised-button color="green">Link WordPress</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

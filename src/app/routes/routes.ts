@@ -20,10 +20,12 @@ export const routes = [
 		path: 'app',
 		component: AdminLayoutComponent,
 		children: [
-			{ path: '', redirectTo: 'settings', pathMatch: 'full' },
-			{ path: 'settings', loadChildren: '../components/settings/settings.module#SettingsModule' },
-			{ path: 'exports', loadChildren: '../components/exports/exports.module#ExportsModule' },
+			{ path: '', redirectTo: 'documents', pathMatch: 'full' },
 			{ path: 'documents', loadChildren: '../components/documents/documents.module#DocumentsModule' },
+			{ path: 'exports', loadChildren: '../components/exports/exports.module#ExportsModule' },
+			// { path: 'settings', loadChildren: '../components/settings/settings.module#SettingsModule' },
+			{ path: 'user', loadChildren: '../components/user/user.module#UserModule' },
+			// { path: 'user', loadChildren: '../components/user/user.module#UserModule' }
 		]
 	}
 	// {

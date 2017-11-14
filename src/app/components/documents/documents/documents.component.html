@@ -1,3 +1,59 @@
-<p>
-  documents works!
-</p>
+<div class="documents-list-page">
+	<div>
+		<h4>Documents</h4>
+	</div>
+	<section *ngIf="loading==true" class="loading-section">
+		<mat-progress-bar
+			class="loading-margin"
+			[color]="color"
+			[mode]="mode">
+		</mat-progress-bar>
+	</section>
+	<div>
+		<div class="document-search-section">
+			<form (ngSubmit)="searchDocFiles()" #wpUserForm="ngForm" novalidate>
+				<mat-grid-list cols="12">
+					<mat-grid-tile colspan="10">
+						<mat-form-field class="input-80-width" floatPlaceholder="never">
+							<input  
+								matInput 
+								placeholder="Search Google Drive"
+								name="searchFiles" 
+								[(ngModel)]="searchValue" 
+								#searchFiles="ngModel">
+						</mat-form-field>
+						<a mat-raised-button (click)="searchDocFiles()">Submit</a>
+					</mat-grid-tile>
+				</mat-grid-list>
+			</form>
+		</div>
+		<div class="doc-files-container mat-elevation-z8">
+			<mat-table #table [dataSource]="dataSource">
+				<ng-container matColumnDef="name">
+					<mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+					<mat-cell *matCellDef="let fileData"> 
+						<a href="https://docs.google.com/document/d/{{fileData.id}}" target="_blank">
+							{{fileData.title}}
+						</a>
+					</mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="author">
+					<mat-header-cell *matHeaderCellDef> Author </mat-header-cell>
+					<mat-cell *matCellDef="let fileData"> 
+						<img class="doc-user-profile" src="{{fileData.owners[0]['picture']['url']}}">
+						{{fileData.owners[0]['displayName']}} 
+					</mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="actions">
+					<mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+					<mat-cell *matCellDef="let fileData"><a mat-raised-button color="accent" (click)="exportDoc(fileData)">Export</a></mat-cell>
+				</ng-container>
+
+				<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+				<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+			</mat-table>
+		</div>
+	</div>
+</div>

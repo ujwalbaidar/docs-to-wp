@@ -19,11 +19,6 @@
 			"response_type": "code"
 		}
 	},
-	"wp":{
-		"client_id": "55795",
-		"client_secret": "aFe6JSWIJKir8ClGRzpEQloiCAaiLwLaBYp9hyUzRYMQs7A91T9uWd4dsKGKwOps",
-		"redirect_url": "http://localhost:3000/app/wp-auth/action/validate/loginType/wp"
-	},
 	"activateAccount":{
 		"secretKey":"c0d3w1ngR3g15ter!!",
 		"expireTime": "1d",

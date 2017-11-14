@@ -1,17 +1,31 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthsService } from './service/auths.service';
+import { WpUserService } from './service/wp-user.service';
+import { ExportsService } from './service/exports.service';
+import { GoogleAuthsService } from './service/google-auths.service';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { 
 	MatButtonModule, 
 	MatCheckboxModule, 
 	MatToolbarModule,
-	MatSidenavModule 
+	MatSidenavModule,
+	MatFormFieldModule,
+	MatInputModule,
+	MatSelectModule,
+	MatSnackBarModule,
+	MatTableModule,
+	MatDialogModule,
+	MatProgressBarModule,
+	MatGridListModule
 } from '@angular/material';
 
 @NgModule({
 	providers: [
 		AuthsService,
+		WpUserService,
+		ExportsService,
+		GoogleAuthsService,
 		CookieService
 	],
 	imports: [
@@ -19,13 +33,29 @@ import {
 		MatButtonModule,
 		MatCheckboxModule,
 		MatToolbarModule,
-		MatSidenavModule
+		MatSidenavModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatSelectModule,
+		MatSnackBarModule,
+		MatTableModule,
+		MatDialogModule,
+		MatProgressBarModule,
+		MatGridListModule
 	],
 	exports: [
 		MatButtonModule,
 		MatCheckboxModule,
 		MatToolbarModule,
-		MatSidenavModule
+		MatSidenavModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatSelectModule,
+		MatSnackBarModule,
+		MatTableModule,
+		MatDialogModule,
+		MatProgressBarModule,
+		MatGridListModule
 	],
 	declarations: []
 })

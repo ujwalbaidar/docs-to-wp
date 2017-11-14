@@ -13,17 +13,21 @@ export class AppComponent implements OnInit {
 	constructor(private router: Router, private _cookieService: CookieService, private location: Location) { }
 
 	ngOnInit(){
-		/*let publicPath = ['/home', '/pricing'];
-		if(JSON.stringify(this._cookieService.getAll()) !== '{}' && (this._cookieService.get('token') !== undefined || this._cookieService.get('token') !== '')){
-			if(publicPath.includes(this.location.path())){
-				this.router.navigate(['/documents']);
-			}else{
-				this.router.navigate([this.location.path()]);
-			}
+		// let publicPath = ['/home', '/pricing'];
+		// if(JSON.stringify(this._cookieService.getAll()) !== '{}' && (this._cookieService.get('token') !== undefined || this._cookieService.get('token') !== '')){
+		// 	if(publicPath.includes(this.location.path())){
+		// 		this.router.navigate(['/app/documents']);
+		// 	}else{
+		// 		// if(this.location.path().includes('/app/google-auth/action/validate/loginType/google') === true){
+		// 		// 	this.router.navigate(['/app/documents']);
+		// 		// }else{
+		// 			this.router.navigate([this.location.path()]);
+		// 		// }
+		// 	}
 
-		}else{
-			this._cookieService.removeAll();
-			this.router.navigate(['/home']);
-		}*/
+		// }else{
+		// 	this._cookieService.removeAll();
+		// 	this.router.navigate(['/home']);
+		// }
 	}
 }

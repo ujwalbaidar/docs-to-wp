@@ -50,6 +50,7 @@ const validateAuthCode = (req, res)=>{
 				processUserDbAuths(googleAuthUser)
 					.then(userData=>{
 						let jwtSignData = {
+							userId: userData._id,
 							userName: userData.firstName,
 							email: userData.email
 						};
@@ -71,42 +72,7 @@ const validateAuthCode = (req, res)=>{
 					})
 					.catch(userDataErr=>{
 						res.status(400).json({success: false, data: userDataErr, message: "Failed to add user informations."});
-					})
-				/*let userObj = {
-					firstName: googleAuthUser.oAuthUserObj.given_name,
-					lastName: googleAuthUser.oAuthUserObj.family_name,
-					role: 20,
-					email: googleAuthUser.oAuthUserObj.email,
-					googleAuths: googleAuthUser.oAuthTokenObj,
-					lastLoggedIn: new Date(),
-					loginCount: 1
-				};*/
-				/*saveUser(userObj)
-					.then(saveUserResp=>{
-						let jwtSignData = {
-							userName: saveUserResp.firstName,
-							email: saveUserResp.email,
-							freeUser: true
-						};
-
-						let jwtSignOptions = {
-							expiresIn: config.activateAccount.expireTime, 
-							algorithm: config.activateAccount.algorithm 
-						};
-
-						let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
-						res.status(200).json({
-							success: true, 
-							data: {
-								name: saveUserResp.firstName,
-								email: saveUserResp.email,
-								token: token
-							}, 
-							message: "Save New User Successfully!"});
-					})
-					.catch(saveUserErr=>{
-						res.status(400).json({success: false, data: saveUserErr, message: "Failed to create new user"});
-					});*/
+					});
 			})
 			.catch(googleAuthUserErr=>{
 				res.status(400).json({success: false, data: googleAuthUserErr, message: "Failed to verify user"});
@@ -185,6 +151,11 @@ const processUserDbAuths = (userObj)=>{
 						lastLoggedIn: new Date(),
 						$inc: {loginCount: 1}
 					};
+					
+					if(userObj.oAuthTokenObj.refresh_token){
+						userUpdateObj['googleAuths.refresh_token'] = userObj.oAuthTokenObj.refresh_token;
+					}
+
 					updateUser(updateQuery, userUpdateObj)
 						.then(userData=>{
 							resolve(userInfo[0]);

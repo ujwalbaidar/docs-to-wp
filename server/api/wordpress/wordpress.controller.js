@@ -1,82 +1,71 @@
 const WordpressOauthLib = require('../../library/wordpressApi/wordpressOAuth');
-var wordpress = require( "wordpress" );
+const wordpress = require( "wordpress" );
+const WpApiLib = require('../../library/wordpressApi/wordpressApi');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
+const WpUser = mongoose.model('WpUser');
 
-const getOAuthUrl = (req, res)=>{
-	let oAuthOptions = {
-		clientId: config['wp']['client_id'],
-		clientSecret: config['wp']['client_secret'],
-		redirectUrl: config['wp']['redirect_url'],
-		blog: 'renewableenergypicks.com'
-	};
-
-	let wordpressOauthLib = new WordpressOauthLib(oAuthOptions);
-	wordpressOauthLib.getOAuthUrl()
-		.then(oAuthUrl=>{
-			res.status(200).json({success: true, data: oAuthUrl, message: 'wordpress oauthu rl retrieved successfully!'});
+const listWpUsers = (req, res)=>{
+	getWpUser({wpUserId: req.headers.userId})
+		.then(wpUserList=>{
+			res.status(200).json({success:true, data: wpUserList, message:'Wordpress users has been retrieved successfully.'});
 		})
-		.catch(oAuthUrlErr=>{
-			console.log(oAuthUrlErr);
-			res.status(400).json({success: false, data: oAuthUrlErr, message: 'failed to retrieve wordpress oauthurl'});
+		.catch(wpUserListErr=>{
+			res.status(400).json({success:false, data: wpUserListErr, message: 'Failed to retrieve wordpress user list.'})
 		});
 }
 
-const validateWpCode = (req, res)=>{
-	let params = req.params;
-	let query = req.query;
-	getOauthTokens(req.query.code)
-		.then(authTokens=>{
-			res.status(200).json({success: true, data: authTokens, message: 'successfully retrieved wordpress auth tokens'});
-		})
-		.catch(authTokenErr=>{
-			res.status(400).json({success: false, data: authTokenErr, message: 'failed to retrieve wordpress auth tokens'});
-		});
-}
-
-const getOauthTokens = (authCode)=>{
+const getWpUser = (query)=>{
 	return new Promise((resolve, reject)=>{
-		let oAuthOptions = {
-				clientId: config['wp']['client_id'],
-				clientSecret: config['wp']['client_secret'],
-				redirectUrl: config['wp']['redirect_url'],
-				authCode: authCode
-			};
-
-			let wordpressOauthLib = new WordpressOauthLib(oAuthOptions);
-				wordpressOauthLib.getOauthTokens()
-					.then(authTokens=>{
-						resolve(authTokens);
-					})
-					.catch(authTokenErr=>{
-						reject(authTokenErr)
-					});
+		WpUser.find(query, (err, wpUsers) => {
+			if(err){
+				reject(err);
+			}else{
+				resolve(wpUsers);
+			}
+		});
 	});
 }
 
-const getPosts = (req, res)=>{
-	var client = wordpress.createClient({
-	    url: "https://renewableenergypicks.com",
-	    username: "testuser",
-	    password: "hJosf0Ja^QwXztY2NeSnzr#l"
-	});
-	var data = {
-		title: 'test for work',
-		content: '<h5>test for work</h5>'
-	}
-	client.newPost(data, function( error, posts ) {
-		if(error){
-			console.log("-------------------------------")
-			console.log(error);
-			console.log("-------------------------------")
-			res.status(400).json(error);
-		}else{
-			console.log(posts)
-			res.status(200).json(posts);
-		}
+const createWpUser = (req, res)=>{
+	let wpApiLib = new WpApiLib();
+	wpApiLib.getWpPost(req.body.url, req.body.username, req.body.password)
+		.then(wpPosts=>{
+			let saveObj = {
+				wpUrl: req.body.url,
+				wpUserName: req.body.username,
+				wpPassword: req.body.password,
+				status: true,
+				wpUserId: req.headers.userId
+			};
+			saveWpUser(saveObj)
+				.then(wpUserInfo=>{
+					res.status(200).json({success: true, data: wpUserInfo, message: 'Wordpress User created successfully.'});
+				})
+				.catch(wpUserInfoErr=>{
+					console.log(wpUserInfoErr)
+					res.status(400).json({success: false, data: wpUserInfoErr, message: 'Failed to create wordpress user'});
+				})
+		})
+		.catch(wpPostsErr=>{
+			res.status(wpPostsErr.code).json({success:false, data: wpPostsErr, message: 'Incorrect username or password'});
+		});
+}
+
+const saveWpUser = (saveObj) => {
+	return new Promise((resolve, reject)=>{
+		let wpUser = new WpUser(saveObj);
+		wpUser.save((err, wpUser)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(wpUser);
+			}
+		});
 	});
 }
 
 module.exports = {
-	getOAuthUrl,
-	validateWpCode,
-	getPosts
+	listWpUsers,
+	createWpUser
 }

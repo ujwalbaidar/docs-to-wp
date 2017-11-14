@@ -1,15 +1,20 @@
 <mat-sidenav mode="side" opened="true">
 	<div class="side-nav-content">
-		<ul>
+		<ul *ngIf="displayAsideContents == true;else emptyWpUserBlock">
 			<li>
-				<a>Documents</a>
+				<a [routerLink]="['/app/documents']">Documents</a>
 			</li>
 			<li>
-				<a>Exports</a>
+				<a [routerLink]="['/app/exports']">Exports</a>
 			</li>
 			<li>
-				<a>Settings</a>
+				<a [routerLink]="['/app/user/lists']">Settings</a>
 			</li>
 		</ul>
+		<ng-template #emptyWpUserBlock>
+			<div>
+				<span>Protip</span>
+			</div>
+		</ng-template>
 	</div>
 </mat-sidenav>

@@ -1,3 +1,34 @@
-<p>
-  exports works!
-</p>
+<div class="file-exports">
+	<div>
+		<h4>Exports</h4>
+	</div>
+	<div class="wp-users-container mat-elevation-z8">
+		<mat-table #table [dataSource]="dataSource">
+			<ng-container matColumnDef="docFileTitle">
+				<mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+				<mat-cell *matCellDef="let fileExports">
+					<a href="https://docs.google.com/document/d/{{fileExports.docFileId}}" target="_blank">
+						{{fileExports.docFileTitle}}
+					</a>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="publishType">
+				<mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+				<mat-cell *matCellDef="let fileExports">
+					<a href="{{fileExports.wpUrl}}/wp-admin/post.php?post={{fileExports.wpId}}&action=edit" target="_blank">
+						{{'Published as ' + fileExports.publishType}} 
+					</a>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="createdDate">
+				<mat-header-cell *matHeaderCellDef> Created </mat-header-cell>
+				<mat-cell *matCellDef="let fileExports"> {{fileExports.createdDate|date:'short'}} </mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</mat-table>
+	</div>
+</div>
