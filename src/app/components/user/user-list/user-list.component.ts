@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WpUserService } from '../../../shared/service/wp-user.service';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie-service';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';

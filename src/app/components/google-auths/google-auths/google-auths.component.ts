@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthsService } from '../../../shared/service/auths.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-google-auths',
@@ -15,9 +15,7 @@ export class GoogleAuthsComponent implements OnInit {
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
 			if(JSON.stringify(params) != "{}" && params.action === 'validate'){
-				this.activatedRoute.queryParams.subscribe(queryParams => {
-				   this.validateOauthCode(queryParams.code, params.loginType);
-				});
+			   this.validateOauthCode(params.code, params.loginType);
 			}else{
 				this.getAuthUrls();
 			}
@@ -40,10 +38,12 @@ export class GoogleAuthsComponent implements OnInit {
 		this.authsService.validateAuthCode(paramObj)
 			.subscribe(authInfos=>{
 				let authInfosData = authInfos.data;
-				this._cookieService.put('name', authInfosData.name);
-				this._cookieService.put('email', authInfosData.email);
-				this._cookieService.put('token', authInfosData.token);
-				this.router.navigate(['/app']);
+				this._cookieService.set('name', authInfosData.name);
+				this._cookieService.set('email', authInfosData.email);
+				this._cookieService.set('token', authInfosData.token);
+				setTimeout(()=>{
+					this.router.navigate(['/app']);
+				}, 500);
 			}, authError=>{
 				// this.router.navigate(['/home']);
 			});

@@ -3,7 +3,7 @@ import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angul
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
 export class ExportsService {

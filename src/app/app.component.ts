@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 
@@ -13,21 +13,29 @@ export class AppComponent implements OnInit {
 	constructor(private router: Router, private _cookieService: CookieService, private location: Location) { }
 
 	ngOnInit(){
-		// let publicPath = ['/home', '/pricing'];
-		// if(JSON.stringify(this._cookieService.getAll()) !== '{}' && (this._cookieService.get('token') !== undefined || this._cookieService.get('token') !== '')){
-		// 	if(publicPath.includes(this.location.path())){
-		// 		this.router.navigate(['/app/documents']);
-		// 	}else{
-		// 		// if(this.location.path().includes('/app/google-auth/action/validate/loginType/google') === true){
-		// 		// 	this.router.navigate(['/app/documents']);
-		// 		// }else{
-		// 			this.router.navigate([this.location.path()]);
-		// 		// }
-		// 	}
+		let publicPath = ['/home', '/pricing'];
+		if(JSON.stringify(this._cookieService.getAll()) !== '{}' && (this._cookieService.get('token') !== undefined || this._cookieService.get('token') !== '')){
+			if(publicPath.includes(this.location.path())){
+				this.router.navigate(['/app/documents']);
+			}else{
+				this.router.navigate(['/app/documents']);
+			}
 
-		// }else{
-		// 	this._cookieService.removeAll();
-		// 	this.router.navigate(['/home']);
-		// }
+		}else{
+			if(this.location.path().startsWith('/app/google-auth/action/validate/loginType/google') && location.search){
+					let queryUrl = {};
+					location.search.substr(1).split("&")
+						.forEach(item => {
+							let [k,v] = item.split("="); 
+							v = v && decodeURIComponent(v); 
+							(queryUrl[k] = queryUrl[k] || []).push(v)
+						});
+					let navigateUrl = ['/app/google-auth/action/validate/loginType/google',queryUrl['code'][0], queryUrl['authuser'][0], queryUrl['prompt'][0], queryUrl['session_state'][0]]
+					this.router.navigate(navigateUrl);
+			}else{
+				// this._cookieService.deleteAll();
+				this.router.navigate(['/home']);
+			}
+		}
 	}
 }

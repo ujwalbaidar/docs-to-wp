@@ -4,7 +4,7 @@ import { AuthsService } from './service/auths.service';
 import { WpUserService } from './service/wp-user.service';
 import { ExportsService } from './service/exports.service';
 import { GoogleAuthsService } from './service/google-auths.service';
-import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { CookieService } from 'ngx-cookie-service';
 import { 
 	MatButtonModule, 
 	MatCheckboxModule, 

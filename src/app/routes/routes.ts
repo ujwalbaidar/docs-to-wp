@@ -13,7 +13,7 @@ export const routes = [
 			{ path: 'home', loadChildren: '../components/home/home.module#HomeModule' },
 			{ path: 'pricing', loadChildren: '../components/pricing/pricing.module#PricingModule' },
 			{ path: 'login', loadChildren: '../components/google-auths/google-auths.module#GoogleAuthsModule' },
-			{ path: 'app/google-auth/action/:action/loginType/:loginType', loadChildren: '../components/google-auths/google-auths.module#GoogleAuthsModule' },
+			{ path: 'app/google-auth/action/:action/loginType/:loginType/:code/:authuser/:prompt/:session_state', loadChildren: '../components/google-auths/google-auths.module#GoogleAuthsModule' },
 		]
 	},
 	{
