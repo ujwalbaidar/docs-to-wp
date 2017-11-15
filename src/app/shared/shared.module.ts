@@ -4,7 +4,6 @@ import { AuthsService } from './service/auths.service';
 import { WpUserService } from './service/wp-user.service';
 import { ExportsService } from './service/exports.service';
 import { GoogleAuthsService } from './service/google-auths.service';
-import { CookieService } from 'ngx-cookie-service';
 import { 
 	MatButtonModule, 
 	MatCheckboxModule, 
@@ -25,8 +24,7 @@ import {
 		AuthsService,
 		WpUserService,
 		ExportsService,
-		GoogleAuthsService,
-		CookieService
+		GoogleAuthsService
 	],
 	imports: [
 		CommonModule,

@@ -3,6 +3,7 @@ const GoogleDriveLib = require('../../library/googleApi/googleDrive');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const jwt = require('jsonwebtoken');
+const shortid = require('shortid');
 
 const getOAuthUrl = (req, res) => {
 	let authUrls = {};
@@ -168,6 +169,7 @@ const processUserDbAuths = (userObj)=>{
 						firstName: userObj.oAuthUserObj.given_name,
 						lastName: userObj.oAuthUserObj.family_name,
 						role: 20,
+						shortUserId: shortid.generate(),
 						email: userObj.oAuthUserObj.email,
 						googleAuths: userObj.oAuthTokenObj,
 						lastLoggedIn: new Date(),

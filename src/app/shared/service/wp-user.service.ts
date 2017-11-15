@@ -3,17 +3,16 @@ import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angul
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
 export class WpUserService {
-
-	constructor(private http: Http, private _cookieService: CookieService) { 
+	public localStorageData = JSON.parse(localStorage.getItem('currentUser'));
+	constructor(private http: Http) { 
 
 	}
 
 	listWpUsers(){
-		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('token') });
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this.localStorageData.token });
     	let options = new RequestOptions({ headers: headers });    	
 		return this.http.get('/api/wordpress/listWpUsers', options)
 			.map(this.extractData)
@@ -23,7 +22,7 @@ export class WpUserService {
 	}
 
 	createWpUser(codeObj:Object){
-		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('token')});
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this.localStorageData.token });
 		let options = new RequestOptions({ headers: headers });
 		return this.http.post('/api/wordpress/createWpUser', codeObj, options)
 			.map(this.extractData)

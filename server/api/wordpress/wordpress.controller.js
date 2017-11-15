@@ -6,13 +6,17 @@ const User = mongoose.model('User');
 const WpUser = mongoose.model('WpUser');
 
 const listWpUsers = (req, res)=>{
-	getWpUser({wpUserId: req.headers.userId})
-		.then(wpUserList=>{
-			res.status(200).json({success:true, data: wpUserList, message:'Wordpress users has been retrieved successfully.'});
-		})
-		.catch(wpUserListErr=>{
-			res.status(400).json({success:false, data: wpUserListErr, message: 'Failed to retrieve wordpress user list.'})
-		});
+	if(req.headers && req.headers.userId){
+		getWpUser({wpUserId: req.headers.userId})
+			.then(wpUserList=>{
+				res.status(200).json({success:true, data: wpUserList, message:'Wordpress users has been retrieved successfully.'});
+			})
+			.catch(wpUserListErr=>{
+				res.status(400).json({success:false, data: wpUserListErr, message: 'Failed to retrieve wordpress user list.'})
+			});
+	}else{
+		res.status(401).json({success:false, data: {}, message: 'Login is Required!'});
+	}
 }
 
 const getWpUser = (query)=>{
@@ -29,7 +33,12 @@ const getWpUser = (query)=>{
 
 const createWpUser = (req, res)=>{
 	let wpApiLib = new WpApiLib();
-	wpApiLib.getWpPost(req.body.url, req.body.username, req.body.password)
+	let wpOptions = {
+		url: req.body.url,
+		username: req.body.username,
+		password: req.body.password
+	};
+	wpApiLib.getWpUserProfile(wpOptions)
 		.then(wpPosts=>{
 			let saveObj = {
 				wpUrl: req.body.url,
@@ -43,7 +52,6 @@ const createWpUser = (req, res)=>{
 					res.status(200).json({success: true, data: wpUserInfo, message: 'Wordpress User created successfully.'});
 				})
 				.catch(wpUserInfoErr=>{
-					console.log(wpUserInfoErr)
 					res.status(400).json({success: false, data: wpUserInfoErr, message: 'Failed to create wordpress user'});
 				})
 		})

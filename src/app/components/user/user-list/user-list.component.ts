@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { WpUserService } from '../../../shared/service/wp-user.service';
-import { CookieService } from 'ngx-cookie-service';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -15,11 +14,12 @@ export class UserListComponent implements OnInit {
 	public cookieInfo: any = {};
 	public displayedColumns: any;
   	public dataSource: any;
-	constructor(public wpUserService: WpUserService, private _cookieService: CookieService) { }
+	constructor(public wpUserService: WpUserService) { }
 
 	ngOnInit() {
+		let localStorageData = JSON.parse(localStorage.getItem('currentUser'));
 		this.cookieInfo = {
-			email: this._cookieService.get('email')
+			email: localStorageData.email
 		}
 		this.listWpUsers();
 	}
