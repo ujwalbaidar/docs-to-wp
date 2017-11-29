@@ -4,6 +4,10 @@ import { AuthsService } from './service/auths.service';
 import { WpUserService } from './service/wp-user.service';
 import { ExportsService } from './service/exports.service';
 import { GoogleAuthsService } from './service/google-auths.service';
+import { UserService } from './service/user.service';
+import { PackagesService } from './service/packages.service';
+import { BillingsService } from './service/billings.service';
+
 import { 
 	MatButtonModule, 
 	MatCheckboxModule, 
@@ -16,7 +20,8 @@ import {
 	MatTableModule,
 	MatDialogModule,
 	MatProgressBarModule,
-	MatGridListModule
+	MatGridListModule,
+	MatCardModule
 } from '@angular/material';
 
 @NgModule({
@@ -24,7 +29,10 @@ import {
 		AuthsService,
 		WpUserService,
 		ExportsService,
-		GoogleAuthsService
+		GoogleAuthsService,
+		UserService,
+		PackagesService,
+		BillingsService
 	],
 	imports: [
 		CommonModule,
@@ -39,7 +47,8 @@ import {
 		MatTableModule,
 		MatDialogModule,
 		MatProgressBarModule,
-		MatGridListModule
+		MatGridListModule,
+		MatCardModule
 	],
 	exports: [
 		MatButtonModule,
@@ -53,7 +62,8 @@ import {
 		MatTableModule,
 		MatDialogModule,
 		MatProgressBarModule,
-		MatGridListModule
+		MatGridListModule,
+		MatCardModule
 	],
 	declarations: []
 })

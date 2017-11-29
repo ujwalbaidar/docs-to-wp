@@ -1,0 +1,142 @@
+<div class="admin-package-dialog">
+	<h2 mat-dialog-title>{{title}}</h2>
+	<form class="admin-login-form" (ngSubmit)="submitPackage(wpPackageForm.form.valid)" #wpPackageForm="ngForm" novalidate>
+		<mat-dialog-content>
+			<mat-grid-list cols="12">
+				<mat-grid-tile colspan="2">
+					<span class="input-label">Name</span>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="10">
+					<mat-form-field class="input-full-width">
+						<input  
+							matInput 
+							name="packageName" 
+							[(ngModel)]="packages.name" 
+							#packageName="ngModel"
+							required>
+					</mat-form-field>
+				</mat-grid-tile>
+			</mat-grid-list>
+
+			<mat-grid-list cols="12">
+				<mat-grid-tile colspan="2">
+					<span class="input-label">Description</span>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="10">
+					<mat-form-field class="input-full-width">
+						<input  
+							matInput 
+							name="packageDescription" 
+							[(ngModel)]="packages.description" 
+							#packageDescription="ngModel"
+							required>
+					</mat-form-field>
+				</mat-grid-tile>
+			</mat-grid-list>
+
+			<mat-grid-list cols="12">
+				<mat-grid-tile colspan="2">
+					<span class="input-label">Cost</span>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="4">
+					<mat-form-field class="input-full-width">
+						<input  
+							matInput 
+							name="packageCost" 
+							type="number"
+							[(ngModel)]="packages.cost" 
+							#packageCost="ngModel"
+							required
+							min="0">
+					</mat-form-field>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="2">
+					<span class="input-label">Validity Period</span>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="4">
+					<mat-form-field class="input-full-width">
+						<input  
+							matInput 
+							name="packageValidityPeriod" 
+							type="number"
+							[(ngModel)]="packages.validityPeriod" 
+							#packageValidityPeriod="ngModel"
+							required
+							min="0">
+					</mat-form-field>
+				</mat-grid-tile>
+			</mat-grid-list>
+
+			<mat-grid-list cols="12">
+				<mat-grid-tile colspan="2">
+					<span class="input-label">Annual Cost</span>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="4">
+					<mat-form-field class="input-full-width">
+						<input  
+							matInput 
+							name="packageAnnualCost" 
+							type="number"
+							[(ngModel)]="packages.annualCost" 
+							#packageAnnualCost="ngModel"
+							required
+							min="0">
+					</mat-form-field>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="2">
+					<span class="input-label">Priority Level</span>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="4">
+					<mat-form-field class="input-full-width">
+						<input  
+							matInput 
+							name="packagePriorityLevel" 
+							type="number"
+							[(ngModel)]="packages.priorityLevel" 
+							#packagePriorityLevel="ngModel"
+							required
+							min="0">
+					</mat-form-field>
+				</mat-grid-tile>
+			</mat-grid-list>
+
+			<mat-grid-list cols="12">
+				<mat-grid-tile colspan="2">
+					<span class="input-label">Max. Urls</span>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="4">
+					<mat-form-field class="input-full-width">
+						<input  
+							matInput 
+							name="packageUrlCounts" 
+							type="number"
+							[(ngModel)]="packages.urlCounts" 
+							#packageUrlCounts="ngModel"
+							required
+							min="0">
+					</mat-form-field>
+				</mat-grid-tile>
+
+				<mat-grid-tile colspan="2">
+					<span class="input-label">Max. Exports</span>
+				</mat-grid-tile>
+				<mat-grid-tile colspan="4">
+					<mat-form-field class="input-full-width">
+						<input  
+							matInput 
+							name="packageExportCounts" 
+							type="number"
+							[(ngModel)]="packages.exportCounts" 
+							#packageExportCounts="ngModel"
+							required
+							min="0">
+					</mat-form-field>
+				</mat-grid-tile>
+			</mat-grid-list>
+
+		</mat-dialog-content>
+		<mat-dialog-actions>
+			<button mat-raised-button color="primary">Submit</button>
+		</mat-dialog-actions>
+	</form>
+</div>

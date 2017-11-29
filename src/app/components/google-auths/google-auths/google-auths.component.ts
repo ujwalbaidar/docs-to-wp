@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthsService } from '../../../shared/service/auths.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-google-auths',
@@ -9,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class GoogleAuthsComponent implements OnInit {
 	public authUrls: any;
-	constructor(public authsService: AuthsService, private activatedRoute: ActivatedRoute, private router: Router) { }
+	constructor(public authsService: AuthsService, private activatedRoute: ActivatedRoute, private router: Router, public snackBar: MatSnackBar) { }
 
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
@@ -27,8 +28,14 @@ export class GoogleAuthsComponent implements OnInit {
 				if(authUrlObj.success === true){
 					this.authUrls = authUrlObj.data;
 				}
-			}, authUrlErr=>{
-
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					window.location.reload();
+				});
 			});
 	}
 
@@ -39,9 +46,14 @@ export class GoogleAuthsComponent implements OnInit {
 				let authInfosData = authInfos.data;
 				localStorage.setItem('currentUser', JSON.stringify({ name: authInfosData.name, email: authInfosData.email, token: authInfosData.token }));
 				this.router.navigate(['/app']);
-			}, authError=>{
-				console.log(authError);
-				// this.router.navigate(['/home']);
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					window.location.reload();
+				});
 			});
 	}
 }

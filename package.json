@@ -6,15 +6,19 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-prod": "ng build --prod --aot",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "client": "concurrently --kill-others \"ng build -op dist -w\" ",
     "server": "nodemon app.js",
-    "start-dev": "npm-run-all -p client server"
+    "server-prod": "node app.js",
+    "start-dev": "npm-run-all -p client server",
+    "start-prod": "npm-run-all -p build-prod server-prod"
   },
   "private": true,
   "dependencies": {
+    "2checkout-node": "0.0.1",
     "@angular/animations": "4.4.6",
     "@angular/cdk": "2.0.0-beta.12",
     "@angular/common": "^4.2.4",

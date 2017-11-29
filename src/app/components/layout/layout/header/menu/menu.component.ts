@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthsService } from '../../../../../shared/service/auths.service';
+import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-menu',
@@ -9,7 +11,7 @@ import { AuthsService } from '../../../../../shared/service/auths.service';
 export class MenuComponent implements OnInit {
 	public menuItems: any;
 
-	constructor(public authsService: AuthsService) { }
+	constructor(public authsService: AuthsService, public snackBar: MatSnackBar, private router: Router) { }
 
 	ngOnInit() {
 		this.getAuthUrls();
@@ -43,8 +45,14 @@ export class MenuComponent implements OnInit {
 						toRedirect: true
 					})
 				}
-			}, authUrlErr=>{
-
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					window.location.reload();
+				});
 			});
 	}
 }

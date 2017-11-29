@@ -4,6 +4,7 @@ let UserSchema = new mongoose.Schema({
 	lastName: String,
 	role: Number,
 	email: {type: String, unique: true, required: true},
+	secondaryEmail: {type: String, unique: true, required: true},
 	shortUserId: {type: String, unique: true, required: true},
 	password: String,
 	googleAuths: Object,

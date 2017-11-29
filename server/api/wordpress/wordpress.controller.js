@@ -1,9 +1,12 @@
 const WordpressOauthLib = require('../../library/wordpressApi/wordpressOAuth');
 const wordpress = require( "wordpress" );
 const WpApiLib = require('../../library/wordpressApi/wordpressApi');
+const CryptoLib = require('../../library/crypto/cryptoLib');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const Billings = mongoose.model('Billings');
 const WpUser = mongoose.model('WpUser');
+const shortid = require('shortid');
 
 const listWpUsers = (req, res)=>{
 	if(req.headers && req.headers.userId){
@@ -31,33 +34,157 @@ const getWpUser = (query)=>{
 	});
 }
 
-const createWpUser = (req, res)=>{
-	let wpApiLib = new WpApiLib();
-	let wpOptions = {
-		url: req.body.url,
-		username: req.body.username,
-		password: req.body.password
-	};
-	wpApiLib.getWpUserProfile(wpOptions)
-		.then(wpPosts=>{
-			let saveObj = {
-				wpUrl: req.body.url,
-				wpUserName: req.body.username,
-				wpPassword: req.body.password,
-				status: true,
-				wpUserId: req.headers.userId
-			};
-			saveWpUser(saveObj)
-				.then(wpUserInfo=>{
-					res.status(200).json({success: true, data: wpUserInfo, message: 'Wordpress User created successfully.'});
-				})
-				.catch(wpUserInfoErr=>{
-					res.status(400).json({success: false, data: wpUserInfoErr, message: 'Failed to create wordpress user'});
-				})
-		})
-		.catch(wpPostsErr=>{
-			res.status(wpPostsErr.code).json({success:false, data: wpPostsErr, message: 'Incorrect username or password'});
+const getWpUserInfo = (req, res)=>{
+	if(req.headers && req.headers.userId){
+		let wpUserId = req.query.wpUserId;
+		WpUser.find({shortWpId: wpUserId}, {_id:0, wpPassword: 0}, (err, wpUserInfo)=>{
+			if(err){
+				res.status(400).json({success:false, data: err, message: 'Failed to retrieve wordpress user data.'})
+			}else{
+				res.status(200).json({success:true, data: wpUserInfo[0], message:'Wordpress users has been retrieved successfully.'});
+			}
 		});
+	}else{
+		res.status(401).json({success:false, data: {}, message: 'Login is Required!'});
+	}
+}
+
+const createWpUser = (req, res)=>{
+	if(req.headers && req.headers.userId){
+		getUserBilling({userId: req.headers.userId}, {_id: 0, selectedProduct: 1, totalWpUrls: 1, totalExports: 1})
+			.then(billingInfo=>{
+				let userBilling = billingInfo[0];
+				let userProduct = userBilling.selectedProduct;
+				if(userBilling.totalWpUrls<userProduct.maxUrls){
+					let wpApiLib = new WpApiLib();
+					let cryptoObj = {
+						cryptoAlgorithm: config['wp']['cryptoAlgorithm'],
+						cryptoSecret: config['wp']['cryptoSecret']
+					};
+					let cryptoLib = new CryptoLib(cryptoObj);
+					cryptoLib.encryptString(req.body.password)
+						.then(encryptedPassword=>{
+							let wpOptions = {
+								url: req.body.url,
+								username: req.body.userName,
+								password: req.body.password
+							};
+
+							wpApiLib.getWpUserProfile(wpOptions)
+								.then(wpPosts=>{
+									let saveObj = {
+										wpUrl: req.body.url,
+										wpUserName: req.body.userName,
+										wpPassword: encryptedPassword,
+										status: true,
+										wpUserId: req.headers.userId,
+										shortWpId: shortid.generate()
+									};
+
+									saveWpUser(saveObj)
+										.then(wpUserInfo=>{
+											let updateObj = {
+												updateDate: new Date(),
+												$inc: {totalWpUrls: 1}
+											};
+											updateUserBilling({userId: req.headers.userId}, updateObj)
+												.then(billingUpdateResp=>{
+														res.status(200).json({success: true, data: wpUserInfo, message: 'Wordpress User created successfully.'});
+													})
+												.catch(billingUpdateErr=>{
+													res.status(400).json({success: false, data: billingUpdateErr, message: 'Failed to update billings'});
+												});
+										})
+										.catch(wpUserInfoErr=>{
+											res.status(400).json({success: false, data: wpUserInfoErr, message: 'Failed to save wordpress user.'});
+										});
+										
+								})
+								.catch(wpPostsErr=>{
+									res.status(wpPostsErr.code).json({success:false, data: wpPostsErr, message: 'Failed to varify wordpress account.'});
+								});
+						});
+				}else{
+					res.status(200).json({success: false, data: {}, message: `You are not allowed to create more than ${userProduct.maxUrls} account.`});
+				}
+			})
+			.catch(billingInfoErr=>{
+				res.status(400).json({success: false, data: billingInfoErr, message: 'Failed to retrieve user billingInfo'});
+			});
+	}else{
+		res.status(401).json({success:false, data: {}, message: 'Login is Required!'});
+	}
+}
+
+const updateWpUser = (req, res)=>{
+	if(req.headers && req.headers.userId){
+		let wpApiLib = new WpApiLib();
+		let wpOptions = {
+			url: req.body.wpUrl,
+			username: req.body.wpUserName,
+			password: req.body.wpPassword
+		};
+
+		wpApiLib.getWpUserProfile(wpOptions)
+			.then(wpPosts=>{
+				let cryptoObj = {
+					cryptoAlgorithm: config['wp']['cryptoAlgorithm'],
+					cryptoSecret: config['wp']['cryptoSecret']
+				};
+				let cryptoLib = new CryptoLib(cryptoObj);
+				cryptoLib.encryptString(req.body.wpPassword)
+					.then(encryptedPassword=>{
+						let updateQuery = {
+							wpUserId: req.headers.userId,
+							shortWpId: req.body.shortWpId
+						};
+
+						let updateObj = {
+							wpUrl: req.body.wpUrl,
+							wpUserName: req.body.wpUserName,
+							wpPassword: encryptedPassword,
+							updateDate: new Date()
+						};
+
+						WpUser.update(updateQuery, updateObj, (err, updateResp)=>{
+							if(err){
+								res.status(400).json({success:false, data: err, message: 'Failed to update wordpress user data.'})
+							}else{
+								res.status(200).json({success:true, data: req.body, message:'Wordpress users has been updated successfully.'});
+							}
+						});
+					});
+			})
+			.catch(wpPostsErr=>{
+				res.status(wpPostsErr.code).json({success:false, data: wpPostsErr, message: 'Failed to varify account.'});
+			});
+	}else{
+		res.status(401).json({success:false, data: {}, message: 'Login is Required!'});
+	}
+}
+
+const getUserBilling = (query, projection)=>{
+	return new Promise((resolve, reject)=>{
+		Billings.find(query, projection, (err, billingInfo)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(billingInfo);
+			}
+		});
+	});
+}
+
+const updateUserBilling = (query, updateObj)=>{
+	return new Promise((resolve, reject)=>{
+		Billings.update(query, updateObj, (err, updateResp)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(updateResp);
+			}
+		});
+	});
 }
 
 const saveWpUser = (saveObj) => {
@@ -75,5 +202,7 @@ const saveWpUser = (saveObj) => {
 
 module.exports = {
 	listWpUsers,
-	createWpUser
+	createWpUser,
+	getWpUserInfo,
+	updateWpUser
 }

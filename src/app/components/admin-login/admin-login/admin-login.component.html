@@ -1,0 +1,52 @@
+<div class="admin-login-page">
+	<form class="admin-login-form" (ngSubmit)="adminLogin(wpAdminLoginForm.form.valid)" #wpAdminLoginForm="ngForm" novalidate>
+		<mat-grid-list cols="12">
+			<mat-grid-tile colspan="2">
+				<label>Email</label>
+			</mat-grid-tile>
+			<mat-grid-tile colspan="10">
+				<mat-form-field class="input-full-width">
+					<input  
+						matInput 
+						name="adminEmail" 
+						[(ngModel)]="admin.email" 
+						#adminEmail="ngModel"
+						pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+						required>
+						<mat-error *ngIf="adminEmail?.errors?.required && submittedLoginForm">
+							This Field is Required!
+						</mat-error>
+						<mat-error *ngIf="adminEmail?.errors?.pattern && submittedLoginForm">
+							Email is Invalid!
+						</mat-error>
+				</mat-form-field>
+			</mat-grid-tile>
+		</mat-grid-list>
+
+		<mat-grid-list cols="12">
+			<mat-grid-tile colspan="2">
+				<label>Password</label>
+			</mat-grid-tile>
+			<mat-grid-tile colspan="10">
+				<mat-form-field class="input-full-width">
+					<input  
+						type="password" 
+						matInput 
+						name="adminPassword" 
+						[(ngModel)]="admin.password" 
+						#adminPassword="ngModel"
+						required>
+					<mat-error *ngIf="adminPassword?.errors?.required && submittedLoginForm">
+						This Field is Required!
+					</mat-error>
+					<mat-error *ngIf="errObj?.errType=='adminPassword'">
+						{{errObj?.msg}}
+					</mat-error>
+				</mat-form-field>
+			</mat-grid-tile>
+		</mat-grid-list>
+		<mat-grid-list cols="12">
+			<button>Submit</button>
+		</mat-grid-list>
+	</form>
+</div>

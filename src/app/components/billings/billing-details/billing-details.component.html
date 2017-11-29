@@ -1,0 +1,188 @@
+<div class="billing-detail-page" *ngIf="billingDetail">
+	<section *ngIf="loading==true" class="loading-section">
+		<mat-progress-bar
+			class="loading-margin"
+			[color]="color"
+			[mode]="mode">
+		</mat-progress-bar>
+	</section>
+	<h1>Billing Detail</h1>
+	<mat-card class="billing-detail-card">
+		<mat-card-content>
+			<div>
+				<h3>Sale # {{billingDetail.sale_id}}</h3>
+			</div>
+			<div class="billing-detail-info">
+				<mat-grid-list cols="3" rowHeight="200px">
+					<mat-grid-tile>
+						<div class="billing-transaction-info">
+							<h4>Transaction</h4>
+							<div>
+								<span>
+									Method
+								</span>
+								<span>
+									{{billingDetail.customer.pay_method.method}}
+								</span>
+							</div>
+							<div>
+								<span>
+									Card Mask
+								</span>
+								<span>
+									{{billingDetail.customer.pay_method.first_six_digits+'...'+billingDetail.customer.pay_method.last_two_digits}}
+								</span>
+							</div>
+							<div>
+								<span>
+									AVS
+								</span>
+								<span>
+									{{billingDetail.customer.pay_method.avs}}
+								</span>
+							</div>
+							<div>
+								<span>
+									CVV
+								</span>
+								<span>
+									{{billingDetail.customer.pay_method.cvv}}
+								</span>
+							</div>
+							<div>
+								<span>
+									Language
+								</span>
+								<span>
+									{{billingDetail.customer.lang}}
+								</span>
+							</div>
+						</div>
+					</mat-grid-tile>
+					<mat-grid-tile>
+						<div class="billing-customer-info">
+							<h4>Customer</h4>
+							<div>
+								<span>
+									Customer ID
+								</span>
+								<span>
+									{{billingDetail.customer.customer_id}}
+								</span>
+							</div>
+							<div>
+								<span>
+									Name
+								</span>
+								<span>
+									{{billingDetail.customer.cardholder_name}}
+								</span>
+							</div>
+							<div>
+								<span>
+									Address
+								</span>
+								<span>
+									{{billingDetail.customer.address_1}}
+								</span>
+								<span>
+									{{billingDetail.customer.city+', '+billingDetail.customer.state}}
+								</span>
+								<span>
+									{{billingDetail.customer.country_name}}
+								</span>
+							</div>
+							<div>
+								<span>
+									Phone
+								</span>
+								<span>
+									{{billingDetail.customer.phone}}
+								</span>
+							</div>
+							<div>
+								<span>
+									Email
+								</span>
+								<span>
+									{{billingDetail.customer.email_address}}
+								</span>
+							</div>
+						</div>
+						
+					</mat-grid-tile>
+					<mat-grid-tile>
+						<div class="billing-ip-info">
+							<h4>IP Information</h4>
+							<div>
+								<span>
+									IP Address
+								</span>
+								<span>
+									{{billingDetail.detail_ip.address}}
+								</span>
+							</div>
+							<div>
+								<span>
+									Location
+								</span>
+								<span>
+									{{billingDetail.detail_ip.city+', '+billingDetail.detail_ip.region}}
+								</span>
+							</div>
+							<div>
+								<span>
+									Country
+								</span>
+								<span>
+									{{billingDetail.detail_ip.country}}
+								</span>
+							</div>
+							<div>
+								<span>
+									Area Code
+								</span>
+								<span>
+									{{billingDetail.detail_ip.area_code}}
+								</span>
+							</div>
+						</div>
+					</mat-grid-tile>
+				</mat-grid-list>
+			</div>
+			<div class="invoice-info">
+				<h3>Invoice {{billingDetail.invoices[0].invoice_id}}</h3>
+				<div>
+					<span>Order Date</span>
+					<span>{{billingDetail.invoices[0]['date_placed']}}</span>
+				</div>
+				<div>
+					<span>Order Paid</span>
+					<span>{{billingDetail.invoices[0]['date_vendor_paid']}}</span>
+				</div>
+				<div>
+					<span>Status</span>
+					<span>{{billingDetail.invoices[0]['status']}}</span>
+				</div>
+				<div class="invoice-billing-table mat-elevation-z8">
+					<mat-table #table [dataSource]="productBillings">
+						<ng-container matColumnDef="product_id">
+							<mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+							<mat-cell *matCellDef="let lineItem"> {{lineItem.vendor_product_id}} </mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="product_description">
+							<mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+							<mat-cell *matCellDef="let lineItem"> {{lineItem.product_description}} </mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="product_cost">
+							<mat-header-cell *matHeaderCellDef> USD Amt </mat-header-cell>
+							<mat-cell *matCellDef="let lineItem"> {{lineItem.usd_amount}} </mat-cell>
+						</ng-container>
+						<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+	    				<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+					</mat-table>
+				</div>
+			</div>
+		</mat-card-content>
+	</mat-card>
+</div>

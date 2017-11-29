@@ -2,9 +2,9 @@ const express = require('express');
 const wordpressController = require('./wordpress.controller');
 const router = express.Router();
 
-// router.get('/oAuthUrl', wordpressController.getOAuthUrl);
-// router.get('/action/:validate/loginType/:wp', wordpressController.validateWpCode);
 router.get('/listWpUsers', wordpressController.listWpUsers);
+router.get('/userInfo', wordpressController.getWpUserInfo);
 router.post('/createWpUser', wordpressController.createWpUser);
+router.put('/wpUser', wordpressController.updateWpUser);
 
 module.exports = router;

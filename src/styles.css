@@ -4,3 +4,11 @@
 body{
 	margin: 0px;
 }
+
+.input-full-width {
+  width: 100%;
+}
+
+.input-80-width {
+	width: 80%;
+}

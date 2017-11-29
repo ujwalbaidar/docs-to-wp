@@ -12,7 +12,8 @@ export const routes = [
 			{ path: '', redirectTo: 'home', pathMatch: 'full' },
 			{ path: 'home', loadChildren: '../components/home/home.module#HomeModule' },
 			{ path: 'pricing', loadChildren: '../components/pricing/pricing.module#PricingModule' },
-			{ path: 'login', loadChildren: '../components/google-auths/google-auths.module#GoogleAuthsModule' },
+			// { path: 'login', loadChildren: '../components/google-auths/google-auths.module#GoogleAuthsModule' },
+			{ path: 'wp-admin/login', loadChildren: '../components/admin-login/admin-login.module#AdminLoginModule' },
 			{ path: 'app/google-auth/action/:action/loginType/:loginType/:code/:authuser/:prompt/:session_state', loadChildren: '../components/google-auths/google-auths.module#GoogleAuthsModule' },
 		]
 	},
@@ -23,11 +24,12 @@ export const routes = [
 			{ path: '', redirectTo: 'documents', pathMatch: 'full' },
 			{ path: 'documents', loadChildren: '../components/documents/documents.module#DocumentsModule' },
 			{ path: 'exports', loadChildren: '../components/exports/exports.module#ExportsModule' },
-			// { path: 'settings', loadChildren: '../components/settings/settings.module#SettingsModule' },
 			{ path: 'user', loadChildren: '../components/user/user.module#UserModule' },
-			// { path: 'user', loadChildren: '../components/user/user.module#UserModule' }
+			{ path: 'packages', loadChildren: '../components/packages/packages.module#PackagesModule' },
+			{ path: 'admin-packages', loadChildren: '../components/admin-packages/admin-packages.module#AdminPackagesModule' },
+			{ path: 'billing', loadChildren: '../components/billings/billings.module#BillingsModule'}
 		]
-	}
+	},
 	// {
 	// 	path: '**', 
 	// 	redirectTo: 'home'

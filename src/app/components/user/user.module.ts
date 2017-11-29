@@ -6,6 +6,8 @@ import { UserComponent } from './user/user.component';
 import { UserCreateComponent } from './user-create/user-create.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { FormsModule }   from '@angular/forms';
+import { WpUserEditComponent } from './wp-user-edit/wp-user-edit.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
 
 const routes: Routes = [
 	{ 
@@ -14,7 +16,9 @@ const routes: Routes = [
 		children: [
 			{ path: '', redirectTo: 'lists', pathMatch: 'full' },
 			{ path: 'lists', component: UserListComponent },
+			{ path: 'edit', component: UserEditComponent },
 			{ path: 'wordpress_site/new', component: UserCreateComponent },
+			{ path: 'wordpress_sites/:wpUserId/edit', component: WpUserEditComponent }
 	    ]
 	}
 ];
@@ -26,7 +30,7 @@ const routes: Routes = [
 		RouterModule.forChild(routes),
 		FormsModule
 	],
-  	declarations: [UserComponent, UserCreateComponent, UserListComponent]
+  	declarations: [UserComponent, UserCreateComponent, UserListComponent, WpUserEditComponent, UserEditComponent]
 })
 
 export class UserModule { }

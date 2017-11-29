@@ -19,6 +19,22 @@
 			"response_type": "code"
 		}
 	},
+	"wp":{
+		"cryptoAlgorithm": "aes192",
+		"cryptoSecret": "c0d3w1ngR3g15ter!!"
+	},
+	"loginPassword":{
+		"algorithm": "sha256",
+		"secretKey": "c0d3w1ngR3g15ter!!"
+	},
+	"tco":{
+		"apiUsername": "codewings",
+		"username": "baidarujwal",
+		"password": "Ujwal123456789",
+		"sellerId": "901363998",
+		"privateKey": "339A0337-FB09-438D-9876-1CE4F98A6F32",
+		"secretWord": "NWEyZGVlZDgtMmY3MC00N2Q2LWE0OGUtMDQxNDFlZTZkMjM1"
+	},
 	"activateAccount":{
 		"secretKey":"c0d3w1ngR3g15ter!!",
 		"expireTime": "1d",

@@ -6,6 +6,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 export interface Doc {
 	title: string;
@@ -25,7 +26,12 @@ export class DocumentsComponent implements OnInit {
   	public dataSource: any;
   	public searchValue: string;
 
-	constructor(public wpUserService: WpUserService, private router: Router, public googleAuthService: GoogleAuthsService, public dialog: MatDialog) { }
+	constructor(
+		public wpUserService: WpUserService, 
+		private router: Router, 
+		public googleAuthService: GoogleAuthsService, 
+		public dialog: MatDialog, 
+		public snackBar: MatSnackBar) { }
 
 	ngOnInit() {
 		this.getWpUser();
@@ -41,8 +47,19 @@ export class DocumentsComponent implements OnInit {
 						this.getGoogleDocLists();
 					}
 				}
-			}, wpUserError=>{
-				console.log(wpUserError);
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					if(error.status === 401){
+						localStorage.removeItem('currentUser');
+						this.router.navigate(['/home']);
+					}else{
+						window.location.reload();
+					}
+				});
 			});
 	}
 
@@ -54,8 +71,19 @@ export class DocumentsComponent implements OnInit {
 					this.loading = false;
 					this.dataSource = new DriveFilesDataSource(driveFiles.data.items);
 				}
-			}, driveFileErr=>{
-				console.log(driveFileErr);
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					if(error.status === 401){
+						localStorage.removeItem('currentUser');
+						this.router.navigate(['/home']);
+					}else{
+						window.location.reload();
+					}
+				});
 			});
 	}
 
@@ -76,10 +104,27 @@ export class DocumentsComponent implements OnInit {
 	exportGoogleDoc(data){
 		this.googleAuthService.exportGoogleDoc(data)
 			.subscribe(exportGoogleDocResp=>{
-					this.router.navigate(['/app/exports']);
-				}, exportGoogleDocErr=>{
-					console.log(exportGoogleDocErr)
-				});
+					if(exportGoogleDocResp.status === false){
+						let snackBarRef = this.snackBar.open(exportGoogleDocResp.message, '',{
+							duration: 3000
+						});
+					}else{
+						this.router.navigate(['/app/exports']);
+					}
+				}, error =>{
+					let errMsg = error.errBody.message || 'Failed to perform this action.';
+					let snackBarRef = this.snackBar.open(errMsg, '',{
+						duration: 2000,
+					});
+					snackBarRef.afterDismissed().subscribe(() => {
+						if(error.status === 401){
+							localStorage.removeItem('currentUser');
+							this.router.navigate(['/home']);
+						}else{
+							window.location.reload();
+						}
+					});
+			});
 	}
 
 	searchDocFiles(){
@@ -88,8 +133,19 @@ export class DocumentsComponent implements OnInit {
 			.subscribe(driveFiles=>{
 				this.loading = false;
 				this.dataSource = new DriveFilesDataSource(driveFiles.data.items);
-			}, driveFilesErr=>{
-				console.log(driveFilesErr);
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					if(error.status === 401){
+						localStorage.removeItem('currentUser');
+						this.router.navigate(['/home']);
+					}else{
+						window.location.reload();
+					}
+				});
 			});
 	}
 }
