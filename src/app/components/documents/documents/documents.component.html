@@ -41,7 +41,7 @@
 				<ng-container matColumnDef="author">
 					<mat-header-cell *matHeaderCellDef> Author </mat-header-cell>
 					<mat-cell *matCellDef="let fileData"> 
-						<img class="doc-user-profile" src="{{fileData.owners[0]['picture']['url']}}">
+						<img *ngIf="fileData.owners[0]['picture']" class="doc-user-profile" src="{{fileData.owners[0]['picture']['url']}}">
 						{{fileData.owners[0]['displayName']}} 
 					</mat-cell>
 				</ng-container>

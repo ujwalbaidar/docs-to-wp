@@ -40,7 +40,7 @@ export class AdminPackagesComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
 			if(result && result.cancel === false){
 				let submitData = result.submitData;
-				if(packageData !== undefined){
+				if(packageData !== undefined || JSON.stringify(packageData) !== '{}'){
 					this.editAdminPackage(submitData);
 				}else{
 					this.saveAdminPackage(submitData);

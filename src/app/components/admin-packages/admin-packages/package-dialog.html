@@ -110,7 +110,7 @@
 							matInput 
 							name="packageUrlCounts" 
 							type="number"
-							[(ngModel)]="packages.urlCounts" 
+							[(ngModel)]="packages.maxUrls" 
 							#packageUrlCounts="ngModel"
 							required
 							min="0">
@@ -126,7 +126,7 @@
 							matInput 
 							name="packageExportCounts" 
 							type="number"
-							[(ngModel)]="packages.exportCounts" 
+							[(ngModel)]="packages.maxExports" 
 							#packageExportCounts="ngModel"
 							required
 							min="0">

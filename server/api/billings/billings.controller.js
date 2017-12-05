@@ -15,7 +15,7 @@ const saveUserBillings = (req, res, next)=>{
 		        "selectedProduct.priorityLevel" : packageInfo[0]['priorityLevel'],
 		        "selectedProduct.cost" : packageInfo[0]['cost'],
 		        "selectedProduct.name" : packageInfo[0]['name'],
-		        "selectedProduct.recurrenceBilling" : true,
+		        "recurrenceBilling" : true,
 		        updateDate: new Date()
 			};
 
@@ -50,10 +50,14 @@ const listUserBilling = (req, res)=>{
 			.then(userBillings=>{
 				if(userBillings.length>0){
 					let billingsSalesIds = userBillings[0]['salesIds'];
-					getTCOUserSales(billingsSalesIds)
-						.then(salesDetails=>{
-							res.status(200).json({success: true, data: salesDetails, message: 'User Billing Response retrieved successfully.'});
-						});
+					if(billingsSalesIds.length>0){
+						getTCOUserSales(billingsSalesIds)
+							.then(salesDetails=>{
+								res.status(200).json({success: true, data: salesDetails, message: 'User Billing Response retrieved successfully.'});
+							});
+					}else{
+						res.status(200).json({success: false, data: {}, message: 'User Sales Billing not found.'});
+					}
 				}else{
 					res.status(200).json({success: false, data: {}, message: 'Your Initial Billing Not found. Please contact support team.'});
 				}
@@ -95,8 +99,8 @@ const getTCOUserSales = (salesIds) =>{
 			    sellerId: config.tco.sellerId,                                    
 			    privateKey: config.tco.privateKey,     
 			    secretWord: config.tco.secretWord,                                    
-			    demo: true,                                             
-			    sandbox: true                                          
+			    demo: config.tco.demo,                                             
+			    sandbox: config.tco.sandbox                                          
 			};
 			retrieveSales(args, tcoOptions)
 				.then(userSales=>{
@@ -128,11 +132,11 @@ const getSalesDetail = (req, res)=>{
 			let tcoOptions = {
 				apiUser: config.tco.apiUsername,
 				apiPass: config.tco.password,
-			    sellerId: config.tco.sellerId,                                    
-			    privateKey: config.tco.privateKey,     
-			    secretWord: config.tco.secretWord,                                    
-			    demo: true,                                             
-			    sandbox: true                                          
+			    sellerId: config.tco.sellerId,
+			    privateKey: config.tco.privateKey,
+			    secretWord: config.tco.secretWord,
+			    demo: config.tco.demo,
+			    sandbox: config.tco.sandbox
 			};
 			retrieveSales(args, tcoOptions)
 				.then(salesDetails=>{
@@ -159,8 +163,23 @@ const retrieveSales = (args, tcoOptions)=>{
 	});
 }
 
+const getUserBillingInfo = (req, res)=>{
+	if(req.headers && req.headers.userId){
+		getUserBilling({userId: req.headers.userId}, {})
+			.then(billingInfo=>{
+				res.status(200).json({success: true, data: billingInfo[0], message: 'Billing information retrieved successfully.'});
+			})
+			.catch(billingInfoErr=>{
+				res.status(400).json({successfully: false, data: billingInfoErr, message: 'Failed to retrieve user billing information.'});
+			});
+	}else{
+		res.status(401).json({success:false, data: {}, message: 'Login is Required!'});
+	}
+}
+
 module.exports = {
 	saveUserBillings,
 	listUserBilling,
-	getSalesDetail
+	getSalesDetail,
+	getUserBillingInfo
 }

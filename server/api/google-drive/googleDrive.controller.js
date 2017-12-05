@@ -9,6 +9,7 @@ const Billings = mongoose.model('Billings');
 const GoogleDriveLib = require('../../library/googleApi/googleDrive');
 const WpApiLib = require('../../library/wordpressApi/wordpressApi');
 const CryptoLib = require('../../library/crypto/cryptoLib');
+const tidy = require('htmltidy').tidy;
 
 const listDriveFiles = (req, res)=>{
 	if(req.headers && req.headers.userId){
@@ -213,9 +214,19 @@ const filterHtmlObj = (htmlContent)=>{
 		$('*').removeAttr('id');
 		$('*').removeAttr('class');
 		let htmlElement = $.html();
-		var bodyContents = htmlElement.split('<body>');
-		bodyContents = bodyContents[1].replace(/[&]nbsp[;]/gi," ").replace(/[<]br[^>]*[>]/gi,"").replace('</body>','').replace('</html>','');
-		resolve(bodyContents)
+		htmlElement.replace(/[<]br[^>]*[>]/gi,"");
+		// var bodyContents = htmlElement.split('<body>');
+		// bodyContents = bodyContents[1].replace(/[&]nbsp[;]/gi," ").replace(/[<]br[^>]*[>]/gi,"").replace('</body>','').replace('</html>','');
+		let opts = {
+		    'doctype': 'html5',
+		    'hideComments': false,
+		    'indent': false,
+		    'show-body-only': true
+		};
+		
+		tidy(htmlElement, opts, (err, htmlData)=>{
+			resolve(htmlData);
+		})
 	});
 }
 

@@ -33,7 +33,19 @@
 		"password": "Ujwal123456789",
 		"sellerId": "901363998",
 		"privateKey": "339A0337-FB09-438D-9876-1CE4F98A6F32",
-		"secretWord": "NWEyZGVlZDgtMmY3MC00N2Q2LWE0OGUtMDQxNDFlZTZkMjM1"
+		"secretWord": "NWEyZGVlZDgtMmY3MC00N2Q2LWE0OGUtMDQxNDFlZTZkMjM1",
+		"demo": false,
+		"sandbox": true
+	},
+	"tco_prod":{
+		"apiUsername": "Codewingsolutions1234",
+		"username": "baidarujwal",
+		"password": "Codewingsolutions1234$#@!",
+		"sellerId": "203511716",
+		"privateKey": "414175D7-C172-4F10-A84E-D645ED9A2456",
+		"secretWord": "56B1C0C1-DD43-450F-8CFF-2A47A8BB6CA8",
+		"demo": false,
+		"sandbox": false
 	},
 	"activateAccount":{
 		"secretKey":"c0d3w1ngR3g15ter!!",

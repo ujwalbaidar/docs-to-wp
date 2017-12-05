@@ -44,8 +44,8 @@ const retrieveProductInfo = (productId)=>{
 		    sellerId: config.tco.sellerId,                                    
 		    privateKey: config.tco.privateKey,     
 		    secretWord: config.tco.secretWord,                                    
-		    demo: true,                                             
-		    sandbox: true                                          
+		    demo: config.tco.demo,                                             
+		    sandbox: config.tco.sandbox                                          
 		};
 
 		var tco = new Twocheckout(tcoOptions);
@@ -65,8 +65,8 @@ const tcoCheckoutUrl = (packageInfo, userId)=>{
 			    sellerId: config.tco.sellerId,                                    
 			    privateKey: config.tco.privateKey,     
 			    secretWord: config.tco.secretWord,                                    
-			    demo: false,                                             
-			    sandbox: true                                          
+			    demo: config.tco.demo,                                             
+			    sandbox: config.tco.sandbox                                          
 			});
 
 			var params = {
@@ -137,8 +137,8 @@ const createTcoPackage = (packageArgs)=>{
 		    sellerId: config.tco.sellerId,                                    
 		    privateKey: config.tco.privateKey,     
 		    secretWord: config.tco.secretWord,                                    
-		    demo: true,                                             
-		    sandbox: true                                          
+		    demo: config.tco.demo,                                             
+		    sandbox: config.tco.sandbox                                          
 		};
 
 		var tco = new Twocheckout(tcoOptions);

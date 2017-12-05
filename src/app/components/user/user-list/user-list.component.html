@@ -9,9 +9,10 @@
 		Email {{userInfo.secondaryEmail}}
 	</div>
 	<div [ngSwitch]="userInfo.accountType">
-		<div *ngSwitchCase="20">Plan {{'Personal'}}<a [routerLink]="['/app/packages']">(Change Plan)</a></div>
-		<div *ngSwitchCase="30">Plan {{'Business'}}<a [routerLink]="['/app/packages']">(Change Plan)</a></div>
-		<div *ngSwitchDefault>Plan {{'Free'}}<a [routerLink]="['/app/packages']">(Change Plan)</a></div>
+		<div *ngIf="userBilling">
+			Plan {{userBilling.selectedProduct.name}}
+			<a [routerLink]="['/app/packages']">(Change Plan)</a>
+		</div>
 	</div>
 	<div>
 		<a mat-raised-button [routerLink]="['/app/user/edit']">Edit</a>
@@ -19,7 +20,7 @@
 	<div>
 		Wordpress Sites
 	</div>
-	<div>
+	<div *ngIf="userBilling && userBilling.selectedProduct.priorityLevel > 2">
 		<a mat-raised-button [routerLink]="['/app/user/wordpress_site/new']">Add New</a>
 	</div>
 	<div class="wp-users-container mat-elevation-z8">
