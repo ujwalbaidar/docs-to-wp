@@ -254,20 +254,10 @@ const findPackage = (query, projections)=>{
 	});
 }
 
-const getInsInfo = (req, res)=>{
-	console.log(req.query)
-	console.log("---------------------------------")
-	console.log(req.params)
-	console.log("---------------------------------")
-	console.log(req.body);
-	console.log("---------------------------------")
-}
-
 module.exports = {
 	getCheckoutUrl,
 	saveAdminPackages,
 	updateAdminPackages,
 	listPackages,
-	getBillingPackages,
-	getInsInfo
+	getBillingPackages
 }

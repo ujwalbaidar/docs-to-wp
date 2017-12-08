@@ -8,6 +8,7 @@ module.exports = function(app){
 	app.use('/api/exports', auth, require('../api/exports'));
 	app.use('/api/packages', auth, require('../api/packages'));
 	app.use('/api/billings', auth, require('../api/billings'));
+	app.use('/app/billings', require('../api/billings'));
 
 	app.use('/admin-api/packages', adminAuth, require('../api/packages'));
 

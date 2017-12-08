@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { SocketIoService } from './shared/service/socket-io.service';
 
 @Component({
 	selector: 'app-root',
@@ -9,7 +10,7 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-	constructor(private router: Router, private location: Location, private activatedRoute: ActivatedRoute) { }
+	constructor(private router: Router, private location: Location, private activatedRoute: ActivatedRoute, public socketIoService: SocketIoService) { }
 
 	ngOnInit(){
 		let publicPath = ['/home', '/pricing', '/wp-admin/login'];

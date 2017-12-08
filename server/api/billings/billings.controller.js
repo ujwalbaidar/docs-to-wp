@@ -177,9 +177,59 @@ const getUserBillingInfo = (req, res)=>{
 	}
 }
 
+const handleInsInfo = (req, res)=>{
+	let insBody = req.body;
+	switch(insBody.message_type){
+		case "ORDER_CREATED":
+			console.log("ORDER_CREATED")
+			break;
+		case "RECURRING_INSTALLMENT_SUCCESS":
+			recurringInstallmentSuccess(req.body)
+				.then(updateResp=>{
+					ioObj.to(socketObj.id).emit('ins-data-obj', `{type:'recurrenceBilling'}`);
+					res.status(200).send('RECURRING_INSTALLMENT_SUCCESS');
+				})
+				.catch(updateErr=>{
+					res.status(400).send('RECURRING_INSTALLMENT_SUCCESS');
+				});
+			break;
+		case "REFUND_ISSUED": 
+			console.log("REFUND_ISSUED")
+			break;
+		case "RECURRING_INSTALLMENT_FAILED": 
+			console.log("RECURRING_INSTALLMENT_FAILED")
+			break;
+		case "RECURRING_STOPPED": 
+			console.log("RECURRING_STOPPED")
+			break;
+	}
+}
+
+const recurringInstallmentSuccess = (insObj)=>{
+	return new Promise((resolve, reject)=>{
+		Billings.update({
+			salesIds:{
+				$in:['insObj.sale_id']
+			}
+		},{ 
+			$set:{
+				totalExports: 13,
+				updateDate: new Date()
+			}
+		}, (err, updateResp)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(updateResp)
+			}
+		});
+	});
+}
+
 module.exports = {
 	saveUserBillings,
 	listUserBilling,
 	getSalesDetail,
-	getUserBillingInfo
+	getUserBillingInfo,
+	handleInsInfo
 }

@@ -1,4 +1,9 @@
 <mat-toolbar color="primary">
 	<span>WP-Engine</span>
-	<span (click)="logout()">Logout</span>
+	<span class="toolbar-spacer"></span>
+	<a class="mat-button">
+		<span><i class="material-icons">public</i></span>
+		<span *ngIf="notifications && notifications.length>0">({{notifications.length}})</span>
+	</a>
+	<a class="mat-button"><span (click)="logout()">Logout</span></a>
 </mat-toolbar>

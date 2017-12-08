@@ -7,6 +7,7 @@ import { GoogleAuthsService } from './service/google-auths.service';
 import { UserService } from './service/user.service';
 import { PackagesService } from './service/packages.service';
 import { BillingsService } from './service/billings.service';
+import { SocketIoService } from './service/socket-io.service';
 
 import { 
 	MatButtonModule, 
@@ -32,7 +33,8 @@ import {
 		GoogleAuthsService,
 		UserService,
 		PackagesService,
-		BillingsService
+		BillingsService,
+		SocketIoService
 	],
 	imports: [
 		CommonModule,
@@ -48,7 +50,8 @@ import {
 		MatDialogModule,
 		MatProgressBarModule,
 		MatGridListModule,
-		MatCardModule
+		MatCardModule,
+		// SocketIoModule.forRoot(socketIoConfig)
 	],
 	exports: [
 		MatButtonModule,

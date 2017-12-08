@@ -6,5 +6,6 @@ router.get('/listUserBillings', billingsController.listUserBilling);
 router.get('/detail', billingsController.getSalesDetail);
 router.get('/userBillingInfo', billingsController.getUserBillingInfo);
 router.post('/saveUserBillings', billingsController.saveUserBillings);
+router.post('/insInfo', billingsController.handleInsInfo);
 
 module.exports = router;
