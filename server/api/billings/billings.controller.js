@@ -186,7 +186,11 @@ const handleInsInfo = (req, res)=>{
 		case "RECURRING_INSTALLMENT_SUCCESS":
 			recurringInstallmentSuccess(req.body)
 				.then(updateResp=>{
-					ioObj.to(socketObj.id).emit('ins-data-obj', `{type:'recurrenceBilling'}`);
+					let notificationObj = {
+						subject: 'Recurring Installment Success',
+						content: `${req.body.message_description}.`
+					}
+					ioObj.to(socketObj.id).emit('ins-data-obj', notificationObj);
 					res.status(200).send('RECURRING_INSTALLMENT_SUCCESS');
 				})
 				.catch(updateErr=>{
@@ -194,10 +198,19 @@ const handleInsInfo = (req, res)=>{
 				});
 			break;
 		case "REFUND_ISSUED": 
-			console.log("REFUND_ISSUED")
+			let notificationObj = {
+				subject: 'Refund Issued',
+				content: `${req.body.message_description}.`
+			}
+			ioObj.to(socketObj.id).emit('ins-data-obj', notificationObj);
 			break;
 		case "RECURRING_INSTALLMENT_FAILED": 
-			console.log("RECURRING_INSTALLMENT_FAILED")
+			let notificationObj = {
+				subject: 'Recurring Installment Success',
+				content: `${req.body.message_description}.`
+			}
+			ioObj.to(socketObj.id).emit('ins-data-obj', notificationObj);
+			res.status(200).send('RECURRING_INSTALLMENT_SUCCESS');
 			break;
 		case "RECURRING_STOPPED": 
 			console.log("RECURRING_STOPPED")

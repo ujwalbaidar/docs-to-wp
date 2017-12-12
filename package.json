@@ -14,7 +14,7 @@
     "server": "nodemon app.js",
     "server-prod": "node app.js",
     "start-dev": "npm-run-all -p client server",
-    "start-prod": "npm-run-all -p build-prod server-prod"
+    "start-prod": "NODE_ENV=production forever start app.js"
   },
   "private": true,
   "dependencies": {
