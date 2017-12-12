@@ -6,7 +6,7 @@
 	"google":{
 		"client_id":"510733714199-l4li7r7gmj7g9uducq6ve07425an07jq.apps.googleusercontent.com",
 		"client_secret":"AJVmEVxaKDtBwaIEiMOhhLVu",
-		"redirect_url": "https://app.doctowp.com/app/google-auth/action/validate/loginType/google",
+		"redirect_url": "https://app.docstowp.com/app/google-auth/action/validate/loginType/google",
 		"oAuthAccess": {
 			"access_type":"offline", 
 			"scope": [
