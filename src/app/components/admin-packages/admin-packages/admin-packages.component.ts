@@ -40,7 +40,7 @@ export class AdminPackagesComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
 			if(result && result.cancel === false){
 				let submitData = result.submitData;
-				if(packageData !== undefined || JSON.stringify(packageData) !== '{}'){
+				if(packageData !== undefined && JSON.stringify(packageData) !== '{}'){
 					this.editAdminPackage(submitData);
 				}else{
 					this.saveAdminPackage(submitData);
@@ -56,7 +56,7 @@ export class AdminPackagesComponent implements OnInit {
 			}, error =>{
 				let errMsg = error.errBody.message || 'Failed to perform this action.';
 				let snackBarRef = this.snackBar.open(errMsg, '',{
-					duration: 2000,
+					duration: 3000,
 				});
 				snackBarRef.afterDismissed().subscribe(() => {
 					if(error.status === 401){
@@ -65,7 +65,7 @@ export class AdminPackagesComponent implements OnInit {
 					}else{
 						window.location.reload();
 					}
-			});
+				});
 		});
 	}
 
@@ -76,7 +76,7 @@ export class AdminPackagesComponent implements OnInit {
 			}, error =>{
 				let errMsg = error.errBody.message || 'Failed to perform this action.';
 				let snackBarRef = this.snackBar.open(errMsg, '',{
-					duration: 2000,
+					duration: 3000,
 				});
 				snackBarRef.afterDismissed().subscribe(() => {
 					if(error.status === 401){
@@ -99,7 +99,7 @@ export class AdminPackagesComponent implements OnInit {
 			}, error =>{
 				let errMsg = error.errBody.message || 'Failed to perform this action.';
 				let snackBarRef = this.snackBar.open(errMsg, '',{
-					duration: 2000,
+					duration: 3000,
 				});
 				snackBarRef.afterDismissed().subscribe(() => {
 					if(error.status === 401){
