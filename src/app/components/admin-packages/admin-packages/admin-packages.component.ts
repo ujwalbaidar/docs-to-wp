@@ -122,6 +122,8 @@ export interface Packages {
 	exportCounts: number;
 	validityPeriod: number;
 	priorityLevel: number;
+	maxUrls: number;
+	maxExports: number;
 }
 
 
