@@ -198,18 +198,18 @@ const handleInsInfo = (req, res)=>{
 				});
 			break;
 		case "REFUND_ISSUED": 
-			let notificationObj = {
+			let refundIssueNotification = {
 				subject: 'Refund Issued',
 				content: `${req.body.message_description}.`
 			}
-			ioObj.to(socketObj.id).emit('ins-data-obj', notificationObj);
+			ioObj.to(socketObj.id).emit('ins-data-obj', refundIssueNotification);
 			break;
 		case "RECURRING_INSTALLMENT_FAILED": 
-			let notificationObj = {
+			let recurringFailedNotification = {
 				subject: 'Recurring Installment Success',
 				content: `${req.body.message_description}.`
 			}
-			ioObj.to(socketObj.id).emit('ins-data-obj', notificationObj);
+			ioObj.to(socketObj.id).emit('ins-data-obj', recurringFailedNotification);
 			res.status(200).send('RECURRING_INSTALLMENT_SUCCESS');
 			break;
 		case "RECURRING_STOPPED": 
