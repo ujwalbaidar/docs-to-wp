@@ -4,7 +4,11 @@ import { AuthsService } from './service/auths.service';
 import { WpUserService } from './service/wp-user.service';
 import { ExportsService } from './service/exports.service';
 import { GoogleAuthsService } from './service/google-auths.service';
-import { CookieService } from 'ngx-cookie-service';
+import { UserService } from './service/user.service';
+import { PackagesService } from './service/packages.service';
+import { BillingsService } from './service/billings.service';
+import { SocketIoService } from './service/socket-io.service';
+
 import { 
 	MatButtonModule, 
 	MatCheckboxModule, 
@@ -17,7 +21,8 @@ import {
 	MatTableModule,
 	MatDialogModule,
 	MatProgressBarModule,
-	MatGridListModule
+	MatGridListModule,
+	MatCardModule
 } from '@angular/material';
 
 @NgModule({
@@ -26,7 +31,10 @@ import {
 		WpUserService,
 		ExportsService,
 		GoogleAuthsService,
-		CookieService
+		UserService,
+		PackagesService,
+		BillingsService,
+		SocketIoService
 	],
 	imports: [
 		CommonModule,
@@ -41,7 +49,9 @@ import {
 		MatTableModule,
 		MatDialogModule,
 		MatProgressBarModule,
-		MatGridListModule
+		MatGridListModule,
+		MatCardModule,
+		// SocketIoModule.forRoot(socketIoConfig)
 	],
 	exports: [
 		MatButtonModule,
@@ -55,7 +65,8 @@ import {
 		MatTableModule,
 		MatDialogModule,
 		MatProgressBarModule,
-		MatGridListModule
+		MatGridListModule,
+		MatCardModule
 	],
 	declarations: []
 })

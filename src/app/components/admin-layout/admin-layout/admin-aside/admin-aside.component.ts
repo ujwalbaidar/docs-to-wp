@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WpUserService } from '../../../../shared/service/wp-user.service';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-admin-aside',
@@ -8,10 +10,11 @@ import { WpUserService } from '../../../../shared/service/wp-user.service';
 })
 export class AdminAsideComponent implements OnInit {
 	public displayAsideContents: boolean = false;
-
-	constructor(public wpUserService: WpUserService) { }
+	public localStorageVal: any;
+	constructor(public wpUserService: WpUserService, private router: Router, public snackBar: MatSnackBar) { }
 
 	ngOnInit() {
+		this.localStorageVal = JSON.parse(localStorage.currentUser);
 		this.getWpUser();
 	}
 
@@ -23,8 +26,19 @@ export class AdminAsideComponent implements OnInit {
 						this.displayAsideContents = true;
 					}
 				}
-			}, wpUserError=>{
-				console.log(wpUserError);
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					if(error.status === 401){
+						localStorage.removeItem('currentUser');
+						this.router.navigate(['/home']);
+					}else{
+						window.location.reload();
+					}
+				});
 			});
 	}
 

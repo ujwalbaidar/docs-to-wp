@@ -1,18 +1,27 @@
 <div class="user-settings-page">
 	<div>
-		<h4>Settings</h4>
+		<h3>Settings</h3>
 	</div>
 	<div>
-		Account
+		<h4>Account</h4>
 	</div>
 	<div>
-		Email {{cookieInfo.email}}
+		Email {{userInfo.secondaryEmail}}
+	</div>
+	<div [ngSwitch]="userInfo.accountType">
+		<div *ngIf="userBilling">
+			Plan {{userBilling.selectedProduct.name}}
+			<a [routerLink]="['/app/packages']">(Change Plan)</a>
+		</div>
 	</div>
 	<div>
-		Plan {{'Trial (Change plans)'}}
+		<a mat-raised-button [routerLink]="['/app/user/edit']">Edit</a>
 	</div>
 	<div>
 		Wordpress Sites
+	</div>
+	<div *ngIf="userBilling && userBilling.selectedProduct.priorityLevel > 2">
+		<a mat-raised-button [routerLink]="['/app/user/wordpress_site/new']">Add New</a>
 	</div>
 	<div class="wp-users-container mat-elevation-z8">
 		<mat-table #table [dataSource]="dataSource">
@@ -28,7 +37,7 @@
 
 			<ng-container matColumnDef="actions">
 				<mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-				<mat-cell *matCellDef="let wpUsers"> <a>{{'Edit'}}</a> </mat-cell>
+				<mat-cell *matCellDef="let wpUsers"> <a mat-raised-button [routerLink]="['/app/user/wordpress_sites/'+wpUsers.shortWpId+'/edit']">Edit</a> </mat-cell>
 			</ng-container>
 
 			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

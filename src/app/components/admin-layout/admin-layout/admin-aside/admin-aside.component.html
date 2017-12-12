@@ -1,20 +1,34 @@
-<mat-sidenav mode="side" opened="true">
-	<div class="side-nav-content">
-		<ul *ngIf="displayAsideContents == true;else emptyWpUserBlock">
-			<li>
-				<a [routerLink]="['/app/documents']">Documents</a>
-			</li>
-			<li>
-				<a [routerLink]="['/app/exports']">Exports</a>
-			</li>
-			<li>
-				<a [routerLink]="['/app/user/lists']">Settings</a>
-			</li>
-		</ul>
-		<ng-template #emptyWpUserBlock>
-			<div>
-				<span>Protip</span>
+<div id="admin-aside">
+	<mat-sidenav mode="side" opened="true">
+		<div *ngIf="localStorageVal.role>20;else userSideContent">
+			<ul>
+				<li>
+					<a [routerLink]="['/app/admin-packages']">Packages</a>
+				</li>
+			</ul>
+		</div>
+		<ng-template #userSideContent>
+			<div class="side-nav-content">
+				<ul *ngIf="displayAsideContents == true;else emptyWpUserBlock">
+					<li>
+						<a [routerLink]="['/app/documents']">Documents</a>
+					</li>
+					<li>
+						<a [routerLink]="['/app/exports']">Exports</a>
+					</li>
+					<li>
+						<a [routerLink]="['/app/user/lists']">Settings</a>
+					</li>
+					<li>
+						<a [routerLink]="['/app/billing']">Billings</a>
+					</li>
+				</ul>
+				<ng-template #emptyWpUserBlock>
+					<div>
+						<span>Protip</span>
+					</div>
+				</ng-template>
 			</div>
 		</ng-template>
-	</div>
-</mat-sidenav>
+	</mat-sidenav>
+</div>

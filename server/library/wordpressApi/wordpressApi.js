@@ -9,6 +9,19 @@ class WpApiLib {
 	constructor(){
 	}
 
+	getWpUserProfile(wpOptions){
+		return new Promise((resolve, reject) => {
+			let client = wordpress.createClient(wpOptions);
+			client.rpc.methodCall('wp.getProfile', [0, wpOptions.username, wpOptions.password], (err, data)=>{
+				if(err){
+					reject(err);
+				}else{
+					resolve(data);
+				}
+			});
+		});
+	}
+
 	getWpPost(url, username, password){
 		return new Promise((resolve, reject)=>{
 			var client = wordpress.createClient({

@@ -10,10 +10,10 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule,
-    SharedModule,
+	    CommonModule,
+	    SharedModule,
 		RouterModule.forChild(routes)
-  	],
+	],
   declarations: [GoogleAuthsComponent]
 })
 export class GoogleAuthsModule { }

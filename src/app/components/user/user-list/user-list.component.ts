@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { WpUserService } from '../../../shared/service/wp-user.service';
-import { CookieService } from 'ngx-cookie-service';
+import { UserService } from '../../../shared/service/user.service';
+import { BillingsService } from '../../../shared/service/billings.service';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -12,16 +15,37 @@ import 'rxjs/add/observable/of';
 })
 export class UserListComponent implements OnInit {
 	public wpUsers: any;
-	public cookieInfo: any = {};
+	public userInfo: any = {};
 	public displayedColumns: any;
   	public dataSource: any;
-	constructor(public wpUserService: WpUserService, private _cookieService: CookieService) { }
+  	public userBilling: any;
+
+	constructor(public wpUserService: WpUserService, private router: Router, public snackBar: MatSnackBar, public userService: UserService, public billingsService: BillingsService) { }
 
 	ngOnInit() {
-		this.cookieInfo = {
-			email: this._cookieService.get('email')
-		}
+		this.getUserInfo();
 		this.listWpUsers();
+		this.getUserBilling();
+	}
+
+	getUserInfo(){
+		this.userService.getUserInfo()
+			.subscribe(userInfo=>{
+				this.userInfo = JSON.parse(JSON.stringify(userInfo.data));
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					if(error.status === 401){
+						localStorage.removeItem('currentUser');
+						this.router.navigate(['/home']);
+					}else{
+						window.location.reload();
+					}
+				});
+			});
 	}
 
 	listWpUsers(){
@@ -31,9 +55,40 @@ export class UserListComponent implements OnInit {
 				if(wpUsers.success == true){
 					this.dataSource = new WpUserDataSource(wpUsers.data);
 				}
-			}, wpUserError=>{
-				console.log(wpUserError);
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					if(error.status === 401){
+						localStorage.removeItem('currentUser');
+						this.router.navigate(['/home']);
+					}else{
+						window.location.reload();
+					}
+				});
 			});
+	}
+
+	getUserBilling(){
+		this.billingsService.getUserBillingInfo()
+			.subscribe(userBilling=>{
+				this.userBilling = userBilling.data;
+			}, error=>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					if(error.status === 401){
+						localStorage.removeItem('currentUser');
+						this.router.navigate(['/home']);
+					}else{
+						window.location.reload();
+					}
+				});
+			})
 	}
 }
 

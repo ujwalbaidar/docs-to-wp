@@ -1,0 +1,33 @@
+<div class="new-user-settings">
+	<div>
+		<h3>Settings</h3>
+	</div>
+	<div>
+		<div class="user-form-container">
+			<form (ngSubmit)="submitWpUser()" #wpUserForm="ngForm" novalidate>
+				<div>
+					<h4>Link WpApp To Your WordPress Site</h4>
+				</div>
+				<div>
+					<mat-form-field floatPlaceholder="always">
+						<input name="wpUrl" [(ngModel)]="wpUser.wpUrl" #wpUrl="ngModel" matInput placeholder="URL">
+					</mat-form-field>
+				</div>
+				<div>
+					<mat-form-field floatPlaceholder="always">
+						<input name="wpUserName" [(ngModel)]="wpUser.wpUserName" #wpUserName="ngModel" matInput placeholder="Username">
+					</mat-form-field>
+				</div>
+				<div>
+					<mat-form-field floatPlaceholder="always">
+						<input name="wpPassword" [(ngModel)]="wpUser.wpPassword" type="password" #wpPassword="ngModel" matInput placeholder="Password">
+					</mat-form-field>
+				</div>
+				<div>
+					<button mat-raised-button color="primary">Submit</button>
+					<a mat-raised-button color="acsent" [routerLink]="['/app/user/lists']">Cancel</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

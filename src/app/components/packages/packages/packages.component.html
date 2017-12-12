@@ -1,0 +1,25 @@
+
+<div class="package-payment-page">
+	<mat-grid-list cols="12" rowHeight="300px">
+		<mat-grid-tile
+			*ngFor="let package of packages"
+			colspan="6">
+				<mat-card class="package-card">
+					<mat-card-content>
+						<div>
+							<h3>
+								{{package.name}}
+							</h3>
+						</div>
+						<div>{{package.description}}</div>
+						<div>{{package.cost | currency:'USD':'symbol'}}</div>
+						<div>{{(package.maxExports==1000?'Unlimited Exports': package.maxExports+' Exports')}}</div>
+						<div>{{(package.maxUrls==1000?'Unlimited WordPress sites': package.maxUrls+' WordPress sites')}}</div>
+						<div>
+							<a mat-raised-button color="primary" (click)="getCheckoutUrl(package.productId)">Make Payment</a>
+						</div>
+					</mat-card-content>
+				</mat-card>
+		</mat-grid-tile>
+	</mat-grid-list>
+</div>

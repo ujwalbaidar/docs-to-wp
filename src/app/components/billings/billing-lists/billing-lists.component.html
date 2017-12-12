@@ -1,0 +1,60 @@
+<div class="user-billing-page">
+	<section *ngIf="loading==true" class="loading-section">
+		<mat-progress-bar
+			class="loading-margin"
+			[color]="color"
+			[mode]="mode">
+		</mat-progress-bar>
+	</section>
+	<div>
+		<h4>Billings</h4>
+	</div>
+	<div class="sales-list-container mat-elevation-z8">
+		<mat-table #table [dataSource]="userBillings">
+			<ng-container matColumnDef="saleId">
+				<mat-header-cell *matHeaderCellDef> Sale # </mat-header-cell>
+				<mat-cell *matCellDef="let salesData"> 
+					<a [routerLink]="['/app/billing/details/']" [queryParams]="{sales_id:salesData.sale_id}">{{salesData.sale_id}}</a>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="datePlaced">
+				<mat-header-cell *matHeaderCellDef> Date Placed </mat-header-cell>
+				<mat-cell *matCellDef="let salesData"> 
+					{{salesData.date_placed|date:'yyyy-MM-dd'}}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="customerName">
+				<mat-header-cell *matHeaderCellDef> Customer Name </mat-header-cell>
+				<mat-cell *matCellDef="let salesData">
+					{{salesData.customer.first_name+' '+salesData.customer.last_name}}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="recurrence">
+				<mat-header-cell *matHeaderCellDef> Recurring </mat-header-cell>
+				<mat-cell *matCellDef="let salesData">
+					{{ salesData.recurring_decline === null?'Yes':'No' }}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="recurrenceDecline">
+				<mat-header-cell *matHeaderCellDef> Recurring Declined </mat-header-cell>
+				<mat-cell *matCellDef="let salesData"> 
+					{{ salesData.recurring_decline === null?'No':'Yes' }}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="usdTotal">
+				<mat-header-cell *matHeaderCellDef> USD Total </mat-header-cell>
+				<mat-cell *matCellDef="let salesData"> 
+					{{ salesData.invoices[0]['usd_total'] | currency:'USD':'symbol' }}
+				</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</mat-table>
+	</div>
+</div>

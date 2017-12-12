@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthsService } from '../../../shared/service/auths.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-google-auths',
@@ -10,7 +10,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class GoogleAuthsComponent implements OnInit {
 	public authUrls: any;
-	constructor(public authsService: AuthsService, private activatedRoute: ActivatedRoute, private router: Router, private _cookieService: CookieService) { }
+	constructor(public authsService: AuthsService, private activatedRoute: ActivatedRoute, private router: Router, public snackBar: MatSnackBar) { }
 
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
@@ -28,8 +28,14 @@ export class GoogleAuthsComponent implements OnInit {
 				if(authUrlObj.success === true){
 					this.authUrls = authUrlObj.data;
 				}
-			}, authUrlErr=>{
-
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					window.location.reload();
+				});
 			});
 	}
 
@@ -38,14 +44,16 @@ export class GoogleAuthsComponent implements OnInit {
 		this.authsService.validateAuthCode(paramObj)
 			.subscribe(authInfos=>{
 				let authInfosData = authInfos.data;
-				this._cookieService.set('name', authInfosData.name);
-				this._cookieService.set('email', authInfosData.email);
-				this._cookieService.set('token', authInfosData.token);
-				setTimeout(()=>{
-					this.router.navigate(['/app']);
-				}, 500);
-			}, authError=>{
-				// this.router.navigate(['/home']);
+				localStorage.setItem('currentUser', JSON.stringify({ name: authInfosData.name, email: authInfosData.email, token: authInfosData.token }));
+				this.router.navigate(['/app']);
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					window.location.reload();
+				});
 			});
 	}
 }
