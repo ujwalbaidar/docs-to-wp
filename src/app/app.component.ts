@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
 	constructor(private router: Router, private location: Location, private activatedRoute: ActivatedRoute, public socketIoService: SocketIoService) { }
 
 	ngOnInit(){
-		let publicPath = ['/home', '/pricing', '/wp-admin/login'];
+		let publicPath = ['/home', '/pricing', '/wp-admin/login', '/privacy-policy'];
 		let localStorageData = JSON.parse(localStorage.getItem('currentUser'));
 		if(JSON.stringify(localStorage.getItem('currentUser')) !== '{}' &&  localStorageData !== null){
 			if(localStorageData.token !== undefined && localStorageData.token !== ''){

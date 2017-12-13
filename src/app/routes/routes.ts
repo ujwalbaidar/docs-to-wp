@@ -12,6 +12,7 @@ export const routes = [
 			{ path: '', redirectTo: 'home', pathMatch: 'full' },
 			{ path: 'home', loadChildren: '../components/home/home.module#HomeModule' },
 			{ path: 'pricing', loadChildren: '../components/pricing/pricing.module#PricingModule' },
+			{ path: 'privacy-policy', loadChildren: '../components/privacy-policy/privacy-policy.module#PrivacyPolicyModule' },
 			// { path: 'login', loadChildren: '../components/google-auths/google-auths.module#GoogleAuthsModule' },
 			{ path: 'wp-admin/login', loadChildren: '../components/admin-login/admin-login.module#AdminLoginModule' },
 			{ path: 'app/google-auth/action/:action/loginType/:loginType/:code/:authuser/:prompt/:session_state', loadChildren: '../components/google-auths/google-auths.module#GoogleAuthsModule' },
