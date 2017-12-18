@@ -5,8 +5,9 @@ import { Router } from '@angular/router';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MatSnackBar } from '@angular/material';
+import { ExportsService } from '../../../shared/service/exports.service';
 
 export interface Doc {
 	title: string;
@@ -30,6 +31,7 @@ export class DocumentsComponent implements OnInit {
 		public wpUserService: WpUserService, 
 		private router: Router, 
 		public googleAuthService: GoogleAuthsService, 
+		public exportsService: ExportsService,
 		public dialog: MatDialog, 
 		public snackBar: MatSnackBar) { }
 
@@ -104,15 +106,44 @@ export class DocumentsComponent implements OnInit {
 	exportGoogleDoc(data){
 		this.googleAuthService.exportGoogleDoc(data)
 			.subscribe(exportGoogleDocResp=>{
-					if(exportGoogleDocResp.status === false){
-						let snackBarRef = this.snackBar.open(exportGoogleDocResp.message, '',{
-							duration: 3000
-						});
-					}else{
-						this.router.navigate(['/app/exports']);
+				let tempDiv = document.createElement('div');
+				tempDiv.innerHTML = exportGoogleDocResp.data.htmlData;
+				let listSpans = tempDiv.getElementsByTagName('span');
+				for(let i=0; i<listSpans.length; i++){
+					if(listSpans[i].style.fontWeight !== undefined && parseInt(listSpans[i].style.fontWeight)>500){
+						listSpans[i].innerHTML = `<strong>${listSpans[i].innerHTML}</strong>`;
 					}
-				}, error =>{
+				}
+				exportGoogleDocResp.data.htmlData = tempDiv.innerHTML;
+				this.exportToWp(exportGoogleDocResp.data);
+			}, error =>{
 					let errMsg = error.errBody.message || 'Failed to perform this action.';
+					let snackBarRef = this.snackBar.open(errMsg, '',{
+						duration: 2000,
+					});
+					snackBarRef.afterDismissed().subscribe(() => {
+						if(error.status === 401){
+							localStorage.removeItem('currentUser');
+							this.router.navigate(['/home']);
+						}else{
+							window.location.reload();
+						}
+					});
+			});
+	}
+
+	exportToWp(exportElement){
+		this.exportsService.exportDocToWp(exportElement)
+			.subscribe(exportDoc=>{
+				if(exportDoc.status === false){
+					let snackBarRef = this.snackBar.open(exportDoc.message, '',{
+						duration: 3000
+					});
+				}else{
+					this.router.navigate(['/app/exports']);
+				}
+			}, error =>{
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
 					let snackBarRef = this.snackBar.open(errMsg, '',{
 						duration: 2000,
 					});

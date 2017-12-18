@@ -20,7 +20,7 @@ export class AdminHeaderComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		console.log(this.socketIoService.notifications.length);
+		// console.log(this.socketIoService.notifications.length);
 	}
 
 	logout(){
