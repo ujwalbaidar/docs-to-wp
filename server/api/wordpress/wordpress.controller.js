@@ -51,6 +51,15 @@ const getWpUserInfo = (req, res)=>{
 
 const createWpUser = (req, res)=>{
 	if(req.headers && req.headers.userId){
+		let userUrl = req.body.url;
+		let splitUserUrl = userUrl.split('://');
+		if(splitUserUrl.length>1){
+			let userWpDomain = splitUserUrl[1];
+			if(userWpDomain.indexOf('/')>-1){
+				let splituserWpDomain = userWpDomain.split('/');
+				req.body.url = `${splitUserUrl[0]}://${splituserWpDomain[0]}`;
+			}
+		}
 		getUserBilling({userId: req.headers.userId}, {_id: 0, selectedProduct: 1, totalWpUrls: 1, totalExports: 1})
 			.then(billingInfo=>{
 				let userBilling = billingInfo[0];
@@ -118,6 +127,15 @@ const createWpUser = (req, res)=>{
 
 const updateWpUser = (req, res)=>{
 	if(req.headers && req.headers.userId){
+		let userUrl = req.body.wpUrl;
+		let splitUserUrl = userUrl.split('://');
+		if(splitUserUrl.length>1){
+			let userWpDomain = splitUserUrl[1];
+			if(userWpDomain.indexOf('/')>-1){
+				let splituserWpDomain = userWpDomain.split('/');
+				req.body.wpUrl = `${splitUserUrl[0]}://${splituserWpDomain[0]}`;
+			}
+		}
 		let wpApiLib = new WpApiLib();
 		let wpOptions = {
 			url: req.body.wpUrl,
