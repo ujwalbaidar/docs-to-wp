@@ -105,8 +105,8 @@ const saveAdminPackages = (req, res) =>{
 			validityPeriod: req.body.validityPeriod,
 			annualCost: req.body.annualCost,
 			priorityLevel: req.body.priorityLevel,
-			maxUrls: req.body.urlCounts,
-			maxExports: req.body.exportCounts,
+			maxUrls: req.body.maxUrls,
+			maxExports: req.body.maxExports,
 			shortPackageId: shortid.generate(),
 			status: true
 		};
@@ -175,8 +175,8 @@ const updateAdminPackages = (req, res) =>{
 			validityPeriod: req.body.validityPeriod,
 			annualCost: req.body.annualCost,
 			priorityLevel: req.body.priorityLevel,
-			maxUrls: req.body.urlCounts,
-			maxExports: req.body.exportCounts,
+			maxUrls: req.body.maxUrls,
+			maxExports: req.body.maxExports,
 			updateDate: new Date()
 		};
 
