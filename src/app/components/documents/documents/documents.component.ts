@@ -113,6 +113,14 @@ export class DocumentsComponent implements OnInit {
 					if(listSpans[i].style.fontWeight !== undefined && parseInt(listSpans[i].style.fontWeight)>500){
 						listSpans[i].innerHTML = `<strong>${listSpans[i].innerHTML}</strong>`;
 					}
+
+					if(listSpans[i].style.fontStyle !== undefined && listSpans[i].style.fontStyle === 'italic'){
+						listSpans[i].innerHTML = `<i>${listSpans[i].innerHTML}</i>`;
+					}
+
+					if(listSpans[i].style.textDecoration !== undefined && listSpans[i].style.textDecoration === 'underline'){
+						listSpans[i].innerHTML = `<u>${listSpans[i].innerHTML}</u>`;
+					}
 				}
 				exportGoogleDocResp.data.htmlData = tempDiv.innerHTML;
 				this.exportToWp(exportGoogleDocResp.data);
