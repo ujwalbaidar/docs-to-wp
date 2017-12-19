@@ -28,11 +28,11 @@
 		"secretKey": "c0d3w1ngR3g15ter!!"
 	},
 	"tco":{
-		"apiUsername": "codewings",
-		"username": "baidarujwal",
+		"apiUsername": "codewingsuser",
+		"username": "codewing",
 		"password": "Ujwal123456789",
-		"sellerId": "901363998",
-		"privateKey": "339A0337-FB09-438D-9876-1CE4F98A6F32",
+		"sellerId": "901366605",
+		"privateKey": "58829D99-634A-4CAF-936D-1D78FD715E39",
 		"secretWord": "NWEyZGVlZDgtMmY3MC00N2Q2LWE0OGUtMDQxNDFlZTZkMjM1",
 		"demo": false,
 		"sandbox": true
