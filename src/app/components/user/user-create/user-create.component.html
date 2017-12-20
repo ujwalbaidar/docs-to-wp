@@ -1,44 +1,90 @@
 <div class="new-user-settings">
 	<div>
-		<h3>Connect Your WordpressSite</h3>
+		<strong>Congratulation!</strong> Your account has been created. Now connect Docs To WP to your WordPress website and start exporting. It will take less than 5 minutes.
 	</div>
-	<div>
-		<h4>Get Started: Link WpEngine To Your WordPress Site</h4>
-		<div class="user-form-container">
-			<form (ngSubmit)="submitWpUser()" #wpUserForm="ngForm" novalidate>
-				<div>
-					<p>Provide the URL of you blog below</p>
-				</div>
-				<div>
-					<p>
-						This means the URL where you would typically log in to your Wordpress Admin Panel but without the /wp-admin portion. So if you typically log into http://www.growandconvert.com/wp-admin, only put http://www.growandconvert.com below.
-					</p>
-				</div>
-				<div>
-					<mat-form-field floatPlaceholder="always">
-						<input name="wpUserUrl" [(ngModel)]="user.url" #wpUserUrl="ngModel" matInput placeholder="URL">
-					</mat-form-field>
-				</div>
-				<div>
-					<strong>WordPress Login</strong>
-				</div>
-				<div>
-					<p>Enter your WordPress username and password (i.e. what you use to login at http://yourblog.com/wp-admin). Make sure you have "Author" level permissions or above (otherwise Wordable won't work).</p>
-				</div>
-				<div>
-					<mat-form-field floatPlaceholder="always">
-						<input name="wpUserName" [(ngModel)]="user.userName" #wpUserName="ngModel" matInput placeholder="Username">
-					</mat-form-field>
-				</div>
-				<div>
-					<mat-form-field floatPlaceholder="always">
-						<input name="wpUserPassword" [(ngModel)]="user.password" #wpUserPassword="ngModel" matInput type="password" placeholder="Password">
-					</mat-form-field>
-				</div>
-				<div>
-					<button mat-raised-button color="green">Link WordPress</button>
-				</div>
+	<div class="user-form-container">
+		<mat-card>
+			<form (ngSubmit)="submitWpUser(wpUserForm.form.valid)" #wpUserForm="ngForm" novalidate>
+				<mat-dialog-content>
+					<mat-grid-list cols="12" rowHeight="60px">
+						<mat-grid-tile colspan="2">
+							<span class="input-label">Enter Your Website Domain (URL):</span>
+						</mat-grid-tile>
+						<mat-grid-tile colspan="10">
+							<mat-form-field class="input-full-width">
+								<input  
+									matInput 
+									name="wpUserUrl" 
+									[(ngModel)]="user.url" 
+									#wpUserUrl="ngModel"
+									required>
+								<mat-error *ngIf="wpUserUrl?.errors?.required && submittedWpUserForm">
+									This Field is Required!
+								</mat-error>
+							</mat-form-field>
+						</mat-grid-tile>
+						<mat-grid-tile colspan="12">
+							<mat-hint>
+								This means the URL where you generally log in to your WordPress Admin Panel but without the /wp-admin part. So if you generally log into https://docstowp.com/wp-admin, only put http://docstowp.com. 
+							</mat-hint>
+						</mat-grid-tile>
+					</mat-grid-list>
+
+					<mat-grid-list cols="12" rowHeight="60px">
+						<mat-grid-tile colspan="1">
+							<span class="input-label">Username:</span>
+						</mat-grid-tile>
+						<mat-grid-tile colspan="11">
+							<mat-form-field class="input-full-width">
+								<input  
+									matInput 
+									name="wpUserName" 
+									[(ngModel)]="user.userName" 
+									#wpUserName="ngModel"
+									required>
+								<mat-error *ngIf="wpUserName?.errors?.required && submittedWpUserForm">
+									This Field is Required!
+								</mat-error>
+							</mat-form-field>
+						</mat-grid-tile>
+						<mat-grid-tile colspan="12">
+							<mat-hint>
+								Enter your WordPress website username i.e. what you use to login at https://yourwebsite.com/wp-admin. Make sure you have "Author" level permissions or above (otherwise Docs to WP won't work). 
+							</mat-hint>
+						</mat-grid-tile>
+					</mat-grid-list>
+
+					<mat-grid-list cols="12" rowHeight="60px">
+						<mat-grid-tile colspan="1">
+							<span class="input-label">Password:</span>
+						</mat-grid-tile>
+						<mat-grid-tile colspan="11">
+							<mat-form-field class="input-full-width">
+								<input  
+									matInput 
+									type="password"
+									name="wpUserPassword" 
+									[(ngModel)]="user.password" 
+									#wpUserPassword="ngModel"
+									required>
+								<mat-error *ngIf="wpUserPassword?.errors?.required && submittedWpUserForm">
+									This Field is Required!
+								</mat-error>
+							</mat-form-field>
+						</mat-grid-tile>
+						<mat-grid-tile colspan="12">
+							<mat-hint>
+								Enter the password for the above username. 
+							</mat-hint>
+						</mat-grid-tile>
+					</mat-grid-list>
+
+				</mat-dialog-content>
+
+				<mat-dialog-actions>
+					<button mat-raised-button color="primary">Link to WordPress Site</button>
+				</mat-dialog-actions>
 			</form>
-		</div>
+		</mat-card>
 	</div>
 </div>
