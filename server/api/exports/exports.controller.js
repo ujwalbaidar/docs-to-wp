@@ -99,6 +99,9 @@ const createWpPost = (userId, docObj, wpContent)=>{
 	return new Promise((resolve, reject)=>{
 		getWpDbuser({wpUserId: userId})
 			.then(wpUserInfo=>{
+				if(docObj.wpAccount !== undefined && JSON.stringify(docObj.wpAccount) !== '{}'){
+					wpUserInfo[0] = docObj.wpAccount;
+				}
 
 				let cryptoObj = {
 					cryptoAlgorithm: config['wp']['cryptoAlgorithm'],

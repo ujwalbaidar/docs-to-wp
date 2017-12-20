@@ -4,6 +4,16 @@
     </div>
     <form (ngSubmit)="submitDocExport()" #exportDocForm="ngForm" novalidate>
         <div>
+            <div *ngIf="doc && doc.wpUsers && doc.wpUsers.length>1">
+                <label>{{'Wordpress Url'}}</label>
+                <mat-form-field>
+                    <mat-select name="wpAccount" [(ngModel)]="doc.wpAccount" #wpAccount="ngModel">
+                        <mat-option *ngFor="let wpUrl of doc.wpUsers" [value]="wpUrl">
+                            {{ wpUrl.wpUrl }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
             <div>
                 <label>{{'Title'}}</label>
                 <mat-form-field>

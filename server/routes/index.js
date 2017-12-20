@@ -11,6 +11,8 @@ module.exports = function(app){
 	app.use('/app/billings', require('../api/billings'));
 
 	app.use('/admin-api/packages', adminAuth, require('../api/packages'));
+	app.use('/admin-api/users', adminAuth, require('../api/users'));
+	app.use('/admin-api/billings', adminAuth, require('../api/billings'));
 
 	app.use('/app/users', require('../api/users'));
 	app.use('/app/wp-auth', require('../api/wordpress'));
