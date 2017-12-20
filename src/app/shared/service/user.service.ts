@@ -12,6 +12,14 @@ export class UserService {
 
 	}
 
+	listUser(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this.localStorageData.token });
+    	let options = new RequestOptions({ headers: headers });    	
+		return this.http.get('/admin-api/users/list', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	getUserInfo(){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this.localStorageData.token });
     	let options = new RequestOptions({ headers: headers });    	

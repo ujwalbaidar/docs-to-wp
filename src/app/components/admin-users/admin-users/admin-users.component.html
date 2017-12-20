@@ -1,0 +1,48 @@
+<div class="user-lists">
+	<div>
+		<h4>Users</h4>
+	</div>
+	<div class="user-list-container mat-elevation-z8">
+		<mat-table #table [dataSource]="dataSource">
+			<ng-container matColumnDef="name">
+				<mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+				<mat-cell *matCellDef="let user">
+					{{user.firstName+' '+user.lastName}}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="email">
+				<mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+				<mat-cell *matCellDef="let user">
+					{{user.email}}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="secondaryEmail">
+				<mat-header-cell *matHeaderCellDef> Secondary Email </mat-header-cell>
+				<mat-cell *matCellDef="let user">
+					{{user.secondaryEmail}}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="loginCount">
+				<mat-header-cell *matHeaderCellDef> Login Count </mat-header-cell>
+				<mat-cell *matCellDef="let user">
+					{{user.loginCount}}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="action">
+				<mat-header-cell *matHeaderCellDef> Login Count </mat-header-cell>
+				<mat-cell *matCellDef="let user">
+					<a [routerLink]="['/app/admin-user-billing/user-id', user._id]">
+						Payment Details
+					</a>
+				</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</mat-table>
+	</div>
+</div>

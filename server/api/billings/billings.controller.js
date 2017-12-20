@@ -239,10 +239,37 @@ const recurringInstallmentSuccess = (insObj)=>{
 	});
 }
 
+const listAdminBillings = (req, res)=>{
+	if(req.headers && parseInt(req.headers.role) === 30){
+		getUserBilling({userId: req.query.userId}, {_id: 0, salesIds: 1})
+			.then(userBillings=>{
+				if(userBillings.length>0){
+					let billingsSalesIds = userBillings[0]['salesIds'];
+					if(billingsSalesIds.length>0){
+						getTCOUserSales(billingsSalesIds)
+							.then(salesDetails=>{
+								res.status(200).json({success: true, data: salesDetails, message: 'User Billing Response retrieved successfully.'});
+							});
+					}else{
+						res.status(200).json({success: false, data: {}, message: 'User Sales Billing not found.'});
+					}
+				}else{
+					res.status(200).json({success: false, data: {}, message: 'Your Initial Billing Not found. Please contact support team.'});
+				}
+			})
+			.catch(userBillingsErr=>{
+				console.log(userBillingsErr)
+			});
+	}else{
+		res.status(401).json({success:false, data: {}, message: 'You are not authorized for this request.'});
+	}
+}
+
 module.exports = {
 	saveUserBillings,
 	listUserBilling,
 	getSalesDetail,
 	getUserBillingInfo,
-	handleInsInfo
+	handleInsInfo,
+	listAdminBillings
 }

@@ -387,11 +387,26 @@ const saveBilling = (saveObj)=>{
 	});
 }
 
+const listUsers = (req, res)=>{
+	if(req.headers && parseInt(req.headers.role) === 30){
+		getUser({role: 20})
+			.then(userData=>{
+				res.status(200).json({success: true, data: userData, message: 'User Data retrieved succcessfully.'});
+			})
+			.catch(userDataErr=>{
+				res.status(400).json({success: false, data: userDataErr, message: 'Failed to retrieve user data.'});
+			})
+	}else{
+		res.status(401).json({success:false, data: {}, message: 'You are not authorized for this request.'});
+	}
+}
+
 module.exports = {
 	createAdminUser,
 	adminLogin,
 	getOAuthUrl,
 	validateAuthCode,
 	getUserInfo,
-	updateUserInfo
+	updateUserInfo,
+	listUsers
 }

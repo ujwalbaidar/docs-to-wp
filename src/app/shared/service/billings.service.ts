@@ -18,6 +18,20 @@ export class BillingsService {
 			.catch(this.handleError);
 	}
 
+	listAdminUserBilling(query:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<query.length;i++){
+			let key = Object.keys(query[i])[0];
+			let value = query[i][key];
+			params.set(key, value);
+		}
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this.localStorageData.token});
+    	let options = new RequestOptions({ headers: headers, search: params }); 	
+		return this.http.get('/admin-api/billings/listAdminBillings', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	getBillingDetails(query:any){
 		let params: URLSearchParams = new URLSearchParams();
 		for(let i=0;i<query.length;i++){

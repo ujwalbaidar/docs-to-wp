@@ -31,7 +31,7 @@ export class ExportsComponent implements OnInit {
 			}, error =>{
 				let errMsg = error.errBody.message || 'Failed to perform this action.';
 				let snackBarRef = this.snackBar.open(errMsg, '',{
-					duration: 2000,
+					duration: 3000,
 				});
 				snackBarRef.afterDismissed().subscribe(() => {
 					if(error.status === 401){
