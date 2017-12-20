@@ -12,6 +12,7 @@ import { ExportsService } from '../../../shared/service/exports.service';
 export interface Doc {
 	title: string;
 	exportMethod: string;
+	wpAccount: string;
 }
 
 @Component({
@@ -26,6 +27,7 @@ export class DocumentsComponent implements OnInit {
 	public displayedColumns: any;
   	public dataSource: any;
   	public searchValue: string;
+  	public wpUsers: any;
 
 	constructor(
 		public wpUserService: WpUserService, 
@@ -42,6 +44,7 @@ export class DocumentsComponent implements OnInit {
 	getWpUser(){
 		this.wpUserService.listWpUsers()
 			.subscribe(wpUsers=>{
+				this.wpUsers = wpUsers.data;
 				if(wpUsers.success == true){
 					if(wpUsers.data.length===0){
 						this.router.navigate(['/app/user/wordpress_site/new']);
@@ -90,10 +93,16 @@ export class DocumentsComponent implements OnInit {
 	}
 
 	exportDoc(fileInfo){
+		let dialogData = { title: fileInfo.title };
+		if(this.wpUsers.length>1){
+			dialogData['wpUsers'] = JSON.parse(JSON.stringify(this.wpUsers));
+		}
+
 		let dialogRef = this.dialog.open(ExportDocDialog, {
 			width: '500px',
-			data: { title: fileInfo.title }
+			data: dialogData
 		});
+
 		dialogRef.afterClosed().subscribe(result => {
 			if(result && result.cancel === false){
 				result.submitData.fileId = fileInfo.id;
@@ -224,6 +233,10 @@ export class ExportDocDialog implements OnInit {
 	ngOnInit(){
 		this.doc['title'] = this.data.title;
 		this.doc['exportMethod'] = this.exportTypes[0]['value'];
+		if(this.data.wpUsers !== undefined && this.data.wpUsers.length>1){
+			this.doc['wpUsers'] = JSON.parse(JSON.stringify(this.data.wpUsers));
+			this.doc['wpAccount'] = this.doc['wpUsers'][0];
+		}
 	}
 
 	cancelSubmit(): void {

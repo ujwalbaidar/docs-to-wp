@@ -28,6 +28,8 @@ export const routes = [
 			{ path: 'user', loadChildren: '../components/user/user.module#UserModule' },
 			{ path: 'packages', loadChildren: '../components/packages/packages.module#PackagesModule' },
 			{ path: 'admin-packages', loadChildren: '../components/admin-packages/admin-packages.module#AdminPackagesModule' },
+			{ path: 'admin-users', loadChildren: '../components/admin-users/admin-users.module#AdminUsersModule' },
+			{ path: 'admin-user-billing', loadChildren: '../components/admin-user-billing/admin-user-billing.module#AdminUserBillingModule' },
 			{ path: 'billing', loadChildren: '../components/billings/billings.module#BillingsModule'}
 		]
 	},
