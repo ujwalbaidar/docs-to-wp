@@ -10,9 +10,7 @@ const routes: Routes = [
 		path: '', 
 		component: AdminUserBillingComponent,
 		children: [
-			{ path: 'user-id/:user-id', component: AdminUserBillingListComponent },
-			// { path: 'details', component: BillingDetailsComponent },
-	    ]
+			{ path: 'user-id/:user-id', component: AdminUserBillingListComponent }
 	}
 ];
 
@@ -25,8 +23,7 @@ const routes: Routes = [
 	declarations: [
 		AdminUserBillingComponent,
 		AdminUserBillingListComponent, 
-		AdminUserBillingListComponent,
-		// BillingDetailsComponent, 
+		AdminUserBillingListComponent
 	]
 })
 export class AdminUserBillingModule { }
