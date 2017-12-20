@@ -1,33 +1,79 @@
-<div class="new-user-settings">
+<div class="edit-user-settings">
 	<div>
 		<h3>Settings</h3>
 	</div>
-	<div>
-		<div class="user-form-container">
-			<form (ngSubmit)="submitWpUser()" #wpUserForm="ngForm" novalidate>
-				<div>
-					<h4>Link WpApp To Your WordPress Site</h4>
-				</div>
-				<div>
-					<mat-form-field floatPlaceholder="always">
-						<input name="wpUrl" [(ngModel)]="wpUser.wpUrl" #wpUrl="ngModel" matInput placeholder="URL">
-					</mat-form-field>
-				</div>
-				<div>
-					<mat-form-field floatPlaceholder="always">
-						<input name="wpUserName" [(ngModel)]="wpUser.wpUserName" #wpUserName="ngModel" matInput placeholder="Username">
-					</mat-form-field>
-				</div>
-				<div>
-					<mat-form-field floatPlaceholder="always">
-						<input name="wpPassword" [(ngModel)]="wpUser.wpPassword" type="password" #wpPassword="ngModel" matInput placeholder="Password">
-					</mat-form-field>
-				</div>
-				<div>
+	<div class="user-form-container">
+		<mat-card>
+			<form (ngSubmit)="submitWpUser(wpUserForm.form.valid)" #wpUserForm="ngForm" novalidate>
+				<mat-dialog-content>
+					<div>
+						<h4>Link Docs to WP to Your WordPress Website</h4>
+					</div>
+					<mat-grid-list cols="12" rowHeight="60px">
+						<mat-grid-tile colspan="2">
+							<span class="input-label">Enter Your Website Domain (URL):</span>
+						</mat-grid-tile>
+						<mat-grid-tile colspan="10">
+							<mat-form-field class="input-full-width">
+								<input  
+									matInput 
+									name="wpUrl" 
+									[(ngModel)]="wpUser.wpUrl" 
+									#wpUrl="ngModel"
+									required>
+								<mat-error *ngIf="wpUrl?.errors?.required && submittedWpUserForm">
+									This Field is Required!
+								</mat-error>
+							</mat-form-field>
+						</mat-grid-tile>
+					</mat-grid-list>
+
+					<mat-grid-list cols="12" rowHeight="60px">
+						<mat-grid-tile colspan="1">
+							<span class="input-label">Username:</span>
+						</mat-grid-tile>
+						<mat-grid-tile colspan="11">
+							<mat-form-field class="input-full-width">
+								<input  
+									matInput 
+									name="wpUserName" 
+									[(ngModel)]="wpUser.wpUserName" 
+									#wpUserName="ngModel"
+									required>
+								<mat-error *ngIf="wpUserName?.errors?.required && submittedWpUserForm">
+									This Field is Required!
+								</mat-error>
+							</mat-form-field>
+						</mat-grid-tile>
+					</mat-grid-list>
+
+					<mat-grid-list cols="12" rowHeight="60px">
+						<mat-grid-tile colspan="1">
+							<span class="input-label">Password:</span>
+						</mat-grid-tile>
+						<mat-grid-tile colspan="11">
+							<mat-form-field class="input-full-width">
+								<input  
+									matInput 
+									type="password"
+									name="wpPassword" 
+									[(ngModel)]="wpUser.wpPassword" 
+									#wpPassword="ngModel"
+									required>
+								<mat-error *ngIf="wpPassword?.errors?.required && submittedWpUserForm">
+									This Field is Required!
+								</mat-error>
+							</mat-form-field>
+						</mat-grid-tile>
+					</mat-grid-list>
+
+				</mat-dialog-content>
+
+				<mat-dialog-actions>
 					<button mat-raised-button color="primary">Submit</button>
-					<a mat-raised-button color="acsent" [routerLink]="['/app/user/lists']">Cancel</a>
-				</div>
+					<a mat-raised-button [routerLink]="['/app/user/lists']">Cancel</a>
+				</mat-dialog-actions>
 			</form>
-		</div>
+		</mat-card>
 	</div>
 </div>
