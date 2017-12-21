@@ -11,6 +11,8 @@ import { MatSnackBar } from '@angular/material';
 })
 export class PackagesComponent implements OnInit {
 	public packages: any;
+	public checked: boolean = true;
+
 	constructor(
 		public packagesService: PackagesService, 
 		private activatedRoute: ActivatedRoute, 
@@ -42,7 +44,12 @@ export class PackagesComponent implements OnInit {
 			});
 	}
 
-	getCheckoutUrl(productId){
+	getCheckoutUrl(packageInfo){
+		if(this.checked === true){
+			var productId = packageInfo.monthlyProductId;
+		}else{
+			var productId = packageInfo.yearlyProductId;
+		}
 		this.packagesService.getCheckoutUrl([{productId:productId}])
 			.subscribe(checkoutUrl=>{
 				if(checkoutUrl.success === true){
@@ -96,6 +103,14 @@ export class PackagesComponent implements OnInit {
 					}
 				});
 		});
+	}
+
+	toggleSlider(){
+		if(this.checked === true){
+			this.checked = false;
+		}else{
+			this.checked = true;
+		}
 	}
 }
 

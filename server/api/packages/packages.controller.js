@@ -112,17 +112,20 @@ const saveAdminPackages = (req, res) =>{
 		};
 		createTcoPackage(saveObj)
 			.then(tcoResp=>{
-				saveObj.productId = tcoResp.product_id;
-				savePackage(saveObj)
-					.then(packageInfo=>{
-						res.status(200).json({success: true, data: packageInfo, message: 'New Package created successfully'});
-					})
-					.catch(tcoErr=>{
-						res.status(400).json({success: false, data: packageErr, message: 'Failed to create new package'});
-					});
-			})
-			.catch(packageErr=>{
-				
+				if(tcoResp.productDataErr.length>0){
+					res.status(200).json({success: false, data: tcoResp.productDataEr, message: 'Error in creating products in tco'});
+				}else{
+					let productDataArr = tcoResp.productDataArr;
+					saveObj.monthlyProductId = productDataArr[0]['product_id'];
+					saveObj.yearlyProductId = productDataArr[1]['product_id'];
+					savePackage(saveObj)
+						.then(packageInfo=>{
+							res.status(200).json({success: true, data: packageInfo, message: 'New Package created successfully'});
+						})
+						.catch(tcoErr=>{
+							res.status(400).json({success: false, data: packageErr, message: 'Failed to create new package'});
+						});
+				}
 			});
 	}else{
 		res.status(401).json({success:false, data: {}, message: 'Request From Unauthrised User!'});
@@ -142,23 +145,43 @@ const createTcoPackage = (packageArgs)=>{
 		};
 
 		var tco = new Twocheckout(tcoOptions);
+		
+		let indexArr = [];
+		let productDataArr = [];
+		let productDataErr = [];
 
-		args = {
+		let args = [{
 		    name: packageArgs.name,
 		    description: packageArgs.description,
 		    price: packageArgs.cost,
 		    recurring: 1,
-		    recurrence: '1 Week',
+		    recurrence: '1 Month',
 		    duration: 'Forever'
-		};
+		},{
+		    name: packageArgs.name,
+		    description: packageArgs.description,
+		    price: packageArgs.annualCost,
+		    recurring: 1,
+		    recurrence: '1 Year',
+		    duration: 'Forever'
+		}];
 
-		tco.products.create(args, function (error, data) {
-		    if (error) {
-		        reject(error);
-		    } else {
-		        resolve(data)
-		    }
-		});
+		for(let i=0; i<2; i++){
+			tco.products.create(args[i], function (error, data) {
+				indexArr.push(i);
+			    if (error) {
+			        productDataErr.push(error);
+			        if(indexArr.length === 2){
+			        	resolve({productDataArr: productDataArr, productDataErr: productDataErr});
+			        }
+			    } else {
+			        productDataArr.push(data);
+			        if(indexArr.length === 2){
+			        	resolve({productDataArr: productDataArr, productDataErr: productDataErr});
+			        }
+			    }
+			});
+		}
 	});
 }
 
@@ -180,17 +203,74 @@ const updateAdminPackages = (req, res) =>{
 			updateDate: new Date()
 		};
 
-		updatePackage(updateQuery, updateObj)
-			.then(packageInfo=>{
-				res.status(200).json({success: true, data: req.body, message: 'Package udpated successfully'});
-			})
-			.catch(packageErr=>{
-				console.log(packageErr)
-				res.status(400).json({success: false, data: packageErr, message: 'Failed to update package'});
+		updateTcoPackage(req.body)
+			.then(tcoUpdateResponse=>{
+				updatePackage(updateQuery, updateObj)
+					.then(packageInfo=>{
+						res.status(200).json({success: true, data: req.body, message: 'Package udpated successfully'});
+					})
+					.catch(packageErr=>{
+						res.status(400).json({success: false, data: packageErr, message: 'Failed to update package'});
+					});
 			});
 	}else{
 		res.status(401).json({success:false, data: {}, message: 'Request From Unauthrised User!'});
 	}
+}
+
+const updateTcoPackage = (packageArgs)=>{
+	return new Promise((resolve, reject)=>{
+		let tcoOptions = {
+			apiUser: config.tco.apiUsername,
+			apiPass: config.tco.password,
+		    sellerId: config.tco.sellerId,                                    
+		    privateKey: config.tco.privateKey,     
+		    secretWord: config.tco.secretWord,                                    
+		    demo: config.tco.demo,                                             
+		    sandbox: config.tco.sandbox                                          
+		};
+
+		var tco = new Twocheckout(tcoOptions);
+		
+		let indexArr = [];
+		let productDataArr = [];
+		let productDataErr = [];
+
+		let args = [{
+			product_id: packageArgs.monthlyProductId,
+		    name: packageArgs.name,
+		    description: packageArgs.description,
+		    price: packageArgs.cost,
+		    recurring: 1,
+		    recurrence: '1 Month',
+		    duration: 'Forever'
+		},{
+			product_id: packageArgs.yearlyProductId,
+		    name: packageArgs.name,
+		    description: packageArgs.description,
+		    price: packageArgs.annualCost,
+		    recurring: 1,
+		    recurrence: '1 Year',
+		    duration: 'Forever'
+		}];
+
+		for(let i=0; i<2; i++){
+			tco.products.update(args[i], function (error, data) {
+				indexArr.push(i);
+			    if (error) {
+			        productDataErr.push(error);
+			        if(indexArr.length === 2){
+			        	resolve({productDataArr: productDataArr, productDataErr: productDataErr});
+			        }
+			    } else {
+			        productDataArr.push(data);
+			        if(indexArr.length === 2){
+			        	resolve({productDataArr: productDataArr, productDataErr: productDataErr});
+			        }
+			    }
+			});
+		}
+	});
 }
 
 const savePackage = (saveObj)=>{

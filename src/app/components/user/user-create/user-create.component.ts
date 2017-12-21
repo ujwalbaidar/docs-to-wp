@@ -11,39 +11,44 @@ import { MatSnackBar } from '@angular/material';
 })
 export class UserCreateComponent implements OnInit {
 	user: User = <User>{};
+	submittedWpUserForm: Boolean = false;
+
 	constructor(public wpUserService: WpUserService, private router: Router, public snackBar: MatSnackBar) { }
 	ngOnInit() {
 	}
 
-	submitWpUser(){
-		this.wpUserService.createWpUser(this.user)
-			.subscribe(userCreateResp=>{
-				if(userCreateResp.success===true){
-					window.location.href = location.origin+'/app/user/lists';
-				}else{
-					let snackBarRef = this.snackBar.open(userCreateResp.message, '',{
+	submitWpUser(isValid){
+		this.submittedWpUserForm = true;
+		if(isValid){
+			this.wpUserService.createWpUser(this.user)
+				.subscribe(userCreateResp=>{
+					if(userCreateResp.success===true){
+						window.location.href = location.origin+'/app/user/lists';
+					}else{
+						let snackBarRef = this.snackBar.open(userCreateResp.message, '',{
+							duration: 3000,
+						});
+						snackBarRef.afterDismissed().subscribe(() => {
+							this.user.userName = '';
+							this.user.password = '';
+							this.user.url = '';
+						});
+					}
+				}, error =>{
+					let errMsg = error.errBody.message || 'Failed to perform this action.';
+					let snackBarRef = this.snackBar.open(errMsg, '',{
 						duration: 3000,
 					});
 					snackBarRef.afterDismissed().subscribe(() => {
-						this.user.userName = '';
-						this.user.password = '';
-						this.user.url = '';
+						if(error.status === 401){
+							localStorage.removeItem('currentUser');
+							this.router.navigate(['/home']);
+						}else{
+							window.location.reload();
+						}
 					});
-				}
-			}, error =>{
-				let errMsg = error.errBody.message || 'Failed to perform this action.';
-				let snackBarRef = this.snackBar.open(errMsg, '',{
-					duration: 3000,
 				});
-				snackBarRef.afterDismissed().subscribe(() => {
-					if(error.status === 401){
-						localStorage.removeItem('currentUser');
-						this.router.navigate(['/home']);
-					}else{
-						window.location.reload();
-					}
-				});
-			});
+		}
 	}
 
 }
