@@ -1,3 +1,39 @@
-<p>
-  pricing works!
-</p>
+<div class="package-payment-page">
+	<section class="example-section">
+		Yearly
+		<mat-slide-toggle
+			class="example-margin"
+			color="primary"
+			[checked]="checked"
+			(change)="toggleSlider()">
+			Monthly
+		</mat-slide-toggle>
+	</section>
+	<mat-grid-list cols="12" rowHeight="300px">
+		<mat-grid-tile
+			*ngFor="let package of packages"
+			colspan="4">
+				<mat-card class="package-card">
+					<mat-card-content>
+						<div>
+							<h3>
+								{{package.name}}
+							</h3>
+						</div>
+						<div>{{package.description}}</div>
+						<div *ngIf="checked === true; else checkedFalse">
+							{{package.cost | currency:'USD':'symbol'}}
+						</div>
+						<ng-template #checkedFalse>
+							{{package.annualCost | currency:'USD':'symbol'}}
+						</ng-template>
+						<div>{{(package.maxExports==1000?'Unlimited Exports': package.maxExports+' Exports')}}</div>
+						<div>{{(package.maxUrls==1000?'Unlimited WordPress sites': package.maxUrls+' WordPress sites')}}</div>
+						<div>
+							<a mat-raised-button color="primary" href="{{googleAuthUrl}}">Start Free Today</a>
+						</div>
+					</mat-card-content>
+				</mat-card>
+		</mat-grid-tile>
+	</mat-grid-list>
+</div>

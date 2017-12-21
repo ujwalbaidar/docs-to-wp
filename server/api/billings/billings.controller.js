@@ -5,7 +5,8 @@ const Twocheckout = require('2checkout-node');
 const request = require('request');
 
 const saveUserBillings = (req, res, next)=>{
-	getPackage({productId: req.body.productId}, {})
+	let getPackageQuery = {$or:[{monthlyProductId: req.body.productId},{yearlyProductId: req.body.productId}]};
+	getPackage(getPackageQuery, {})
 		.then(packageInfo=>{
 			let updateObj = { 
 				$addToSet: {salesIds: req.body.salesId },
