@@ -1,0 +1,13 @@
+.input-label{
+	position: absolute;
+	left: 5px;
+}
+
+.mat-hint{
+	position: absolute;
+	left: 5px;
+}
+
+.welcome-msg{
+	padding-bottom: 20px;
+}

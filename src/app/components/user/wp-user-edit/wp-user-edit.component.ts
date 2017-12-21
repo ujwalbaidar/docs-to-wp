@@ -16,6 +16,8 @@ export interface WpUser {
 })
 export class WpUserEditComponent implements OnInit {
 	wpUser: WpUser = <WpUser>{};
+	submittedWpUserForm: boolean = false;
+	
 	constructor(public wpUserService: WpUserService, private router: Router, public snackBar: MatSnackBar, private activatedRoute: ActivatedRoute) { }
 
 	ngOnInit() {
@@ -45,23 +47,26 @@ export class WpUserEditComponent implements OnInit {
 			});
 	}
 
-	submitWpUser(){
-		this.wpUserService.updateWpUser(this.wpUser)
-			.subscribe(wpUserInfo=>{
-				this.router.navigate(['/app/user/lists'])
-			}, error =>{
-				let errMsg = error.errBody.message || 'Failed to perform this action.';
-				let snackBarRef = this.snackBar.open(errMsg, '',{
-					duration: 2000,
+	submitWpUser(isValid){
+		this.submittedWpUserForm = true;
+		if(isValid){
+			this.wpUserService.updateWpUser(this.wpUser)
+				.subscribe(wpUserInfo=>{
+					this.router.navigate(['/app/user/lists'])
+				}, error =>{
+					let errMsg = error.errBody.message || 'Failed to perform this action.';
+					let snackBarRef = this.snackBar.open(errMsg, '',{
+						duration: 2000,
+					});
+					snackBarRef.afterDismissed().subscribe(() => {
+						if(error.status === 401){
+							localStorage.removeItem('currentUser');
+							this.router.navigate(['/home']);
+						}else{
+							window.location.reload();
+						}
+					});
 				});
-				snackBarRef.afterDismissed().subscribe(() => {
-					if(error.status === 401){
-						localStorage.removeItem('currentUser');
-						this.router.navigate(['/home']);
-					}else{
-						window.location.reload();
-					}
-				});
-			});
+		}
 	}
 }

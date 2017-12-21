@@ -85,7 +85,7 @@ export class AdminPackagesComponent implements OnInit {
 					}else{
 						window.location.reload();
 					}
-			});
+				});
 		});
 	}
 
@@ -108,7 +108,7 @@ export class AdminPackagesComponent implements OnInit {
 					}else{
 						window.location.reload();
 					}
-			});
+				});
 		});
 	}
 }

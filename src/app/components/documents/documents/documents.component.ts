@@ -13,6 +13,7 @@ export interface Doc {
 	title: string;
 	exportMethod: string;
 	wpAccount: string;
+	wpUsers: any;
 }
 
 @Component({
