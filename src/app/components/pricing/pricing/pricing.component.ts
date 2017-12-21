@@ -65,4 +65,12 @@ export class PricingComponent implements OnInit {
 				});
 			});
 	}
+
+	toggleSlider(){
+		if(this.checked === true){
+			this.checked = false;
+		}else{
+			this.checked = true;
+		}
+	}
 }
