@@ -22,7 +22,8 @@ import {
 	MatDialogModule,
 	MatProgressBarModule,
 	MatGridListModule,
-	MatCardModule
+	MatCardModule,
+	MatSlideToggleModule
 } from '@angular/material';
 
 @NgModule({
@@ -51,6 +52,7 @@ import {
 		MatProgressBarModule,
 		MatGridListModule,
 		MatCardModule,
+		MatSlideToggleModule
 		// SocketIoModule.forRoot(socketIoConfig)
 	],
 	exports: [
@@ -66,7 +68,8 @@ import {
 		MatDialogModule,
 		MatProgressBarModule,
 		MatGridListModule,
-		MatCardModule
+		MatCardModule,
+		MatSlideToggleModule
 	],
 	declarations: []
 })
