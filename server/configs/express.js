@@ -5,7 +5,9 @@ const morgan = require('morgan');
 const rootPath = path.normalize(__dirname + '/../../');
 
 module.exports = function(app){
+    app.use(bodyParser.json({limit: '5120mb'}));
     app.use(bodyParser.urlencoded({
+        limit: '5120mb',
         extended: true
     }));
     app.use(bodyParser.json());
