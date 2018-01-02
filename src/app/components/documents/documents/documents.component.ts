@@ -114,6 +114,7 @@ export class DocumentsComponent implements OnInit {
 	}
 
 	exportGoogleDoc(data){
+		this.loading = true;
 		this.googleAuthService.exportGoogleDoc(data)
 			.subscribe(exportGoogleDocResp=>{
 				let tempDiv = document.createElement('div');
@@ -158,9 +159,11 @@ export class DocumentsComponent implements OnInit {
 						duration: 3000
 					});
 				}else{
+					this.loading = false;
 					this.router.navigate(['/app/exports']);
 				}
 			}, error =>{
+				this.loading = false;
 				let errMsg = error.errBody.message || 'Failed to perform this action.';
 					let snackBarRef = this.snackBar.open(errMsg, '',{
 						duration: 2000,
