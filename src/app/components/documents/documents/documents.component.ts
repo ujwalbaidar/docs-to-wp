@@ -120,6 +120,8 @@ export class DocumentsComponent implements OnInit {
 				let tempDiv = document.createElement('div');
 				tempDiv.innerHTML = exportGoogleDocResp.data.htmlData;
 				let listSpans = tempDiv.getElementsByTagName('span');
+				let listatags = tempDiv.getElementsByTagName('a');
+				
 				for(let i=0; i<listSpans.length; i++){
 					if(listSpans[i].style.fontWeight !== undefined && parseInt(listSpans[i].style.fontWeight)>500){
 						listSpans[i].innerHTML = `<strong>${listSpans[i].innerHTML}</strong>`;
@@ -133,6 +135,27 @@ export class DocumentsComponent implements OnInit {
 						listSpans[i].innerHTML = `<u>${listSpans[i].innerHTML}</u>`;
 					}
 				}
+
+				for(let i=0; i<listatags.length; i++){
+					let aTagHashVal = listatags[i].hash;
+					let aTagHrefVal = listatags[i].href;
+					if(aTagHrefVal.includes('https://www.google.com/url?q=')=== true){
+						listatags[i].href=aTagHrefVal.split('q=')[1];
+					}
+					if(aTagHrefVal.includes("#cmnt") === true){
+						let aTagParentElement = listatags[i].parentElement;
+						let aTagParentElementTagName = aTagParentElement.tagName;
+						while(aTagParentElementTagName !== 'DIV'){
+							aTagParentElement = aTagParentElement.parentElement;
+							if(aTagParentElement.tagName === 'DIV'){
+								break;
+							}
+						}
+						aTagParentElement.className = "remove_element";
+					}
+				}
+				let removeElements = tempDiv.getElementsByClassName("remove_element");
+				while (removeElements.length > 0) removeElements[0].remove();
 				exportGoogleDocResp.data.htmlData = tempDiv.innerHTML;
 				this.exportToWp(exportGoogleDocResp.data);
 			}, error =>{
