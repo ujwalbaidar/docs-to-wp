@@ -121,7 +121,6 @@ export class DocumentsComponent implements OnInit {
 				tempDiv.innerHTML = exportGoogleDocResp.data.htmlData;
 				let listSpans = tempDiv.getElementsByTagName('span');
 				let listatags = tempDiv.getElementsByTagName('a');
-				
 				for(let i=0; i<listSpans.length; i++){
 					if(listSpans[i].style.fontWeight !== undefined && parseInt(listSpans[i].style.fontWeight)>500){
 						listSpans[i].innerHTML = `<strong>${listSpans[i].innerHTML}</strong>`;
@@ -145,6 +144,9 @@ export class DocumentsComponent implements OnInit {
 					if(aTagHrefVal.includes("#cmnt") === true){
 						let aTagParentElement = listatags[i].parentElement;
 						let aTagParentElementTagName = aTagParentElement.tagName;
+						if(listatags[i].parentElement.tagName === 'SUP'){
+							listatags[i].parentElement.className = "remove_element";
+						}
 						while(aTagParentElementTagName !== 'DIV'){
 							aTagParentElement = aTagParentElement.parentElement;
 							if(aTagParentElement.tagName === 'DIV'){
@@ -156,7 +158,7 @@ export class DocumentsComponent implements OnInit {
 				}
 				let removeElements = tempDiv.getElementsByClassName("remove_element");
 				while (removeElements.length > 0) removeElements[0].remove();
-				exportGoogleDocResp.data.htmlData = tempDiv.innerHTML;
+				exportGoogleDocResp.data.htmlData = tempDiv.innerHTML.trim();
 				this.exportToWp(exportGoogleDocResp.data);
 			}, error =>{
 					let errMsg = error.errBody.message || 'Failed to perform this action.';
