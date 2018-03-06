@@ -7,6 +7,9 @@ const WpApiLib = require('../../library/wordpressApi/wordpressApi');
 const CryptoLib = require('../../library/crypto/cryptoLib');
 const Billings = mongoose.model('Billings');
 
+var wordpress = require( "wordpress" );
+var request = require('request').defaults({ encoding: null });
+
 const getExportLists = (req, res)=>{
 	if(req.headers && req.headers.userId){
 		getExports({userId: req.headers.userId}, {})
@@ -23,7 +26,7 @@ const getExportLists = (req, res)=>{
 
 const getExports = (query, projection)=>{
 	return new Promise((resolve, reject)=>{
-		Export.find(query).sort({createdDate:-1}).exec((exportsErr, exportsResp)=>{
+		Export.find(query).sort({createdDate:-1, _id: -1}).exec((exportsErr, exportsResp)=>{
 			if(exportsErr){
 				reject(exportsErr);
 			}else{
@@ -37,7 +40,7 @@ const exportDocToWp = (req, res)=>{
 	if(req.headers && req.headers.userId){
 		let docObj = req.body;
 		let userId = req.headers.userId;
-		filterHtmlObj(req.body.htmlData)
+		filterHtmlObj(req.body.htmlData, userId)
 			.then(htmlText=>{
 				createWpPost(userId, docObj, htmlText)
 					.then((createPostResp) => {
@@ -68,29 +71,109 @@ const exportDocToWp = (req, res)=>{
 	}
 }
 
-const filterHtmlObj = (htmlContent)=>{
+const filterHtmlObj = (htmlContent, userId)=>{
 	return new Promise((resolve, reject)=>{
 		var $ = cheerio.load(htmlContent, {ignoreWhitespace: true, useHtmlParser2: true});
 		$('*').removeAttr('style');
 		$('*').removeAttr('id');
 		$('*').removeAttr('class');
-		let htmlElement = $.html();
-		htmlElement.replace(/<\/?span[^>]*>/g,"").replace(/[<]br[^>]*[>]/gi,"")
-		let opts = {
-		    'doctype': 'html5',
-		    'gdoc': true,
-		    'hideComments': false,
-		    'indent': false,
-		    'show-body-only': true,
-		    'wrap': 0,
-		    'anchor-as-name': false,
-		    'quote-nbsp': false,
-		    'drop-empty-elements': true,
-		    'drop-empty-paras': true
-		};
+		var images = $('*').children('img').map(function(){
+		    return $(this).attr('src');
+		}).get();
+		uploadWpMedia(images, userId)
+			.then(imageEl =>{
+				$('*').find('img').each(function(index){
+					if(imageEl[$(this).attr('src')]){
+						$(this).attr('src', imageEl[$(this).attr('src')])
+					}
+				});
+
+				let htmlElement = $.html();
+
+				htmlElement.replace(/<\/?span[^>]*>/g,"").replace(/[<]br[^>]*[>]/gi,"")
+				let opts = {
+				    'doctype': 'html5',
+				    'gdoc': true,
+				    'hideComments': false,
+				    'indent': false,
+				    'show-body-only': true,
+				    'wrap': 0,
+				    'anchor-as-name': false,
+				    'quote-nbsp': false,
+				    'drop-empty-elements': true,
+				    'drop-empty-paras': true
+				};
+				tidy(htmlElement, opts, (err, htmlData)=>{
+					resolve(htmlData);
+				});
+			});
 		
-		tidy(htmlElement, opts, (err, htmlData)=>{
-			resolve(htmlData);
+	});
+}
+
+const uploadWpMedia = (mediaArray, userId)=>{
+	let imgArrIndex = [];
+	let imgObj = {};
+	return new Promise((resolve, reject) => {
+		getWpDbuser({wpUserId: userId})
+			.then(wpUserInfo=>{
+				
+				let cryptoObj = {
+					cryptoAlgorithm: config['wp']['cryptoAlgorithm'],
+					cryptoSecret: config['wp']['cryptoSecret']
+				};
+				
+				let cryptoLib = new CryptoLib(cryptoObj);
+				cryptoLib.decryptString(wpUserInfo[0]['wpPassword'])
+					.then(decryptedPassword=>{
+						let wpOptions = {
+						    url: wpUserInfo[0]['wpUrl'],
+						    username: wpUserInfo[0]['wpUserName'],
+						    password: decryptedPassword
+						};
+
+						for(let i=0; i<mediaArray.length; i++){
+							let imageName = mediaArray[i].split('/').splice(-1,1)[0];
+							if(mediaArray[i].indexOf("googleusercontent.com") > -1){
+								imageName = imageName+'.jpg';
+							}
+							getGoogleDocsImage(mediaArray[i])
+								.then(imageBuffer=>{
+									var client = wordpress.createClient(wpOptions);
+
+									let args = {
+										name: imageName,
+										type: "image/jpg",
+										bits: imageBuffer
+									};
+
+									client.uploadFile(args, function( error, data ) {
+										if(error){
+											imgArrIndex.push(i);
+										}else{
+											imgArrIndex.push(i);
+											imgObj[mediaArray[i]] = data.link;
+										}
+
+										if(imgArrIndex.length == mediaArray.length){
+											resolve(imgObj);
+										}
+									});
+								});
+						}
+					});
+			});
+	});
+}
+
+const getGoogleDocsImage = (imageUrl)=> {
+	return new Promise((resolve)=>{
+		request.get(imageUrl, (err, res, body) => {
+			if(!err && res.statusCode === 200){
+				resolve(body)
+			}else{
+				resolve(imageUrl)
+			}
 		});
 	});
 }
