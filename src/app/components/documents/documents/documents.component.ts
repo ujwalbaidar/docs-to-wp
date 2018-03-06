@@ -131,7 +131,9 @@ export class DocumentsComponent implements OnInit {
 					}
 
 					if(listSpans[i].style.textDecoration !== undefined && listSpans[i].style.textDecoration === 'underline'){
-						listSpans[i].innerHTML = `<u>${listSpans[i].innerHTML}</u>`;
+						if(listSpans[i].firstElementChild === null){
+							listSpans[i].innerHTML = `<u>${listSpans[i].innerHTML}</u>`;
+						}
 					}
 				}
 
