@@ -12,3 +12,228 @@ body{
 .input-80-width {
 	width: 80%;
 }
+
+
+/*CSS FIXINGS*/
+
+
+.topnavbar-wrapper ul li a{
+	font-size: 16px !important;
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border-bottom: 1px solid transparent;
+  -webkit-text-fill-color: #000;
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  -webkit-transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.wrapper .admin-login-form {
+	max-width: 650px;
+	margin: 0 auto;
+	padding: 50px 0;
+	border:1px solid rgba(221, 221, 221, 0.3);
+	padding:50px;
+	margin-top: 50px;
+	-webkit-box-shadow: 0px 0px 12px -3px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 0px 12px -3px rgba(0,0,0,0.2);
+	box-shadow: 0px 0px 12px -3px rgba(0,0,0,0.2);
+	box-sizing: border-box;
+}
+
+@media only screen and (max-width: 650px){
+    .wrapper .admin-login-form{
+    	margin: 20px;
+    	width: calc(100% - 40px) !important;
+    	box-sizing: border-box;
+    }
+}
+
+
+.wrapper .admin-login-form .mat-grid-tile .mat-figure{
+	justify-content: left;
+}
+
+.wrapper .admin-login-form .mat-grid-tile .mat-figure label{
+	max-width: 150px;
+	display: block;
+
+}
+
+.wrapper .admin-login-form button{
+	padding: 12px 27px;
+	display: inline-block;
+	cursor: pointer;
+	box-shadow: none;
+	text-decoration: none;
+    color: #fff;
+    background: #26a69a;
+    text-align: center;
+    letter-spacing: .5px;
+    -webkit-transition: .2s ease-out;
+    transition: .2s ease-out;
+    cursor: pointer;
+    border: 0;
+}
+
+.wrapper .admin-login-form button:hover,
+ .wrapper .admin-login-form button:focus{
+  -webkit-box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+}
+
+
+.wrapper .admin-login-form .mat-grid-list:last-child{
+	margin-top: 20px;
+}
+
+.aside-wrapper #admin-aside ul{
+	margin: 0;
+	padding: 0;
+	font-size: 15px;
+	font-family:Roboto,"Helvetica Neue",sans-serif;
+	border-top: 1px solid #5d4545;;
+}
+
+
+.aside-wrapper #admin-aside ul li a{
+	color: #fff;
+	padding: 15px 20px;
+	display: block;
+	text-decoration: none;
+	background: transparent;
+	-webkit-transition:all ease 0.3s;
+	-moz-transition:all ease 0.3s;
+	transition:all ease 0.3s;
+}
+
+.aside-wrapper #admin-aside ul li:not(:last-child) a{
+	border-bottom: 1px solid #5d4545;;
+}
+
+.aside-wrapper #admin-aside ul li a:hover{
+	-webkit-box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+  background: rgba(221, 221, 221, 0.3);
+}
+
+.aside-wrapper #admin-aside {
+	-webkit-box-shadow: 10px 0px 19px -6px rgba(0,0,0,0.28);
+	-moz-box-shadow: 10px 0px 19px -6px rgba(0,0,0,0.28);
+	box-shadow: 10px 0px 19px -6px rgba(0,0,0,0.28);
+	background: #23282d !important;
+}
+
+.mat-toolbar.mat-primary{
+	background:#23282d;
+	-webkit-box-shadow: 0 8px 20px #d2d2d2;
+	-moz-box-shadow: 0 8px 20px #d2d2d2;
+	box-shadow: 0 8px 20px #d2d2d2;
+}
+
+.topnavbar-wrapper .mat-toolbar{
+	min-height: 50px;
+}
+
+.topnavbar-wrapper .mat-toolbar-row{
+	height: 55px;
+}
+
+.content-wrapper .admin-packages-page h3,
+.content-wrapper .user-lists h4,
+.content-wrapper .user-billing-page h4,
+.content-wrapper .documents-list-page h4,
+.content-wrapper .file-exports h4,
+.content-wrapper .user-settings-page h3{
+	font-family:Roboto,"Helvetica Neue",sans-serif;
+	font-size: 20px;
+	margin-bottom: 10px;
+	margin-top: 15px;
+}
+
+.content-wrapper .admin-packages-page .mat-raised-button{
+	margin: 5px 0;
+	padding: 2px 20px;
+	display: inline-block;
+	cursor: pointer;
+	box-shadow: none;
+	text-decoration: none;
+    color: #fff;
+    background: #26a69a;
+    text-align: center;
+    letter-spacing: .5px;
+    -webkit-transition: .2s ease-out;
+    transition: .2s ease-out;
+    cursor: pointer;
+    border: 0;
+
+}
+
+.content-wrapper .admin-packages-page h3 ~.mat-raised-button{
+	margin-bottom: 20px;
+	margin-top: 0;
+}
+
+.content-wrapper .admin-packages-page .mat-raised-button:hover,
+ .content-wrapper .admin-packages-page .mat-raised-button:focus{
+  -webkit-box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+}
+
+.mat-grid-tile .mat-figure{
+	font-family:Roboto,"Helvetica Neue",sans-serif;
+}
+
+.mat-toolbar-layout .mat-button{
+	padding: 0;
+}
+
+.mat-toolbar-layout .mat-button .material-icons{
+	margin: 0 10px;
+}
+
+
+.admin-package-dialog .admin-login-form button,
+.doc-files-container .mat-raised-button{
+	padding: 3px 22px;
+	display: inline-block;
+	cursor: pointer;
+	box-shadow: none;
+	text-decoration: none;
+    color: #fff;
+       background-color:  #26a69a !important;
+    text-align: center;
+    letter-spacing: .5px;
+    -webkit-transition: .2s ease-out;
+    transition: .2s ease-out;
+    cursor: pointer;
+    border: 0;
+}
+
+.admin-package-dialog .admin-login-form button:hover,
+ .admin-package-dialog .admin-login-form button:focus,
+ .doc-files-container .mat-raised-button:hover,
+ .doc-files-container .mat-raised-button:focus{
+  -webkit-box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+}
+
+
+/*client page*/
+.side-nav-content{
+	max-width: 100% !important;
+}
+
+
+
