@@ -40,7 +40,7 @@ select:-webkit-autofill:focus {
 }
 
 .wrapper .admin-login-form {
-	max-width: 650px;
+	max-width: 840px;
 	margin: 0 auto;
 	padding: 50px 0;
 	border:1px solid rgba(221, 221, 221, 0.3);
@@ -155,7 +155,10 @@ select:-webkit-autofill:focus {
 .content-wrapper .user-billing-page h4,
 .content-wrapper .documents-list-page h4,
 .content-wrapper .file-exports h4,
-.content-wrapper .user-settings-page h3{
+.content-wrapper .user-settings-page h3,
+.export-doc-modal h4,
+.new-user-settings h3,
+.edit-user-settings h3{
 	font-family:Roboto,"Helvetica Neue",sans-serif;
 	font-size: 20px;
 	margin-bottom: 10px;
@@ -191,7 +194,8 @@ select:-webkit-autofill:focus {
   box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
 }
 
-.mat-grid-tile .mat-figure{
+.mat-grid-tile .mat-figure,
+.export-doc-modal .ng-pristine {
 	font-family:Roboto,"Helvetica Neue",sans-serif;
 }
 
@@ -205,7 +209,11 @@ select:-webkit-autofill:focus {
 
 
 .admin-package-dialog .admin-login-form button,
-.doc-files-container .mat-raised-button{
+.doc-files-container .mat-raised-button,
+.export-doc-modal .ng-pristine .mat-raised-button,
+.user-settings-page div .mat-raised-button,
+.user-form-container .mat-raised-button,
+.package-payment-page .mat-raised-button{
 	padding: 3px 22px;
 	display: inline-block;
 	cursor: pointer;
@@ -224,7 +232,15 @@ select:-webkit-autofill:focus {
 .admin-package-dialog .admin-login-form button:hover,
  .admin-package-dialog .admin-login-form button:focus,
  .doc-files-container .mat-raised-button:hover,
- .doc-files-container .mat-raised-button:focus{
+ .doc-files-container .mat-raised-button:focus,
+ .export-doc-modal .ng-pristine .mat-raised-button:hover,
+ .export-doc-modal .ng-pristine .mat-raised-button:focus,
+ .user-settings-page div .mat-raised-button:hover,
+ .user-settings-page div .mat-raised-button:focus,
+ .user-form-container .mat-raised-button:hover,
+ .user-form-container .mat-raised-button:focus,
+ .package-payment-page .mat-raised-button:hover,
+ .package-payment-page .mat-raised-button:focus{
   -webkit-box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
   box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
 }
@@ -234,6 +250,120 @@ select:-webkit-autofill:focus {
 .side-nav-content{
 	max-width: 100% !important;
 }
+
+.user-settings-page,
+.package-payment-page{
+	font-family:Roboto,"Helvetica Neue",sans-serif;
+}
+
+.user-settings-page h4,
+.new-user-settings  h4,
+.package-payment-page .mat-grid-list .mat-grid-tile .mat-card-content h3{
+	font-family:Roboto,"Helvetica Neue",sans-serif;
+	border-bottom: 1px solid #ccc;
+	display: inline-block;
+	padding-bottom: 2px;
+	margin-bottom: 10px;
+}
+
+.user-settings-page .wp-users-container{
+	margin: 15px 0;
+}
+
+
+.user-settings-page div .mat-raised-button{
+	margin: 10px 0;
+}
+
+.new-user-settings .mat-form-field{
+	width: 30%;
+}
+
+.user-form-container{
+	max-width: 1050px;
+}
+
+.doc-files-container img{
+	vertical-align: middle;
+}
+
+.mat-slide-toggle.mat-primary.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar{
+	background-color: rgba(38, 166, 154, 0.5);
+}
+
+.mat-slide-toggle.mat-primary.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+	background-color: #26a69a ;
+}
+
+.package-payment-page .mat-raised-button{
+	margin-top: 15px;
+}
+
+
+/*extracss*/
+.package-payment-page .mat-grid-list .mat-grid-tile{
+	/*max-width: 410px;*/
+	position: unset;
+	overflow: visible;
+}
+.package-payment-page .mat-grid-list{
+	/*display: flex;*/
+	margin-top: 30px;
+}
+
+.package-payment-page .mat-grid-list div:after{
+	display: block;
+	content: '';
+	clear: both;
+}
+
+.package-payment-page .mat-grid-list div{
+	margin: 0 -10px;
+}
+
+.package-payment-page .mat-grid-list .mat-grid-tile{
+	width:25% !important;
+	padding: 0 10px;
+	margin-bottom: 20px;
+	float: left;
+	-webkit-box-sizing: border-box;
+      box-sizing: border-box;
+}
+
+.package-payment-page .package-card div{
+	margin: 15px 0 !important;
+
+}
+.package-payment-page .package-card{
+	width: 100% !important;
+
+	transition: all ease-in-out 0.3s;
+	box-shadow: none !important;
+	border:1px solid #ddd;;
+	padding: 24px 40px;
+}
+
+.package-card:hover{
+	border-radius: 5px;
+	-webkit-box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2) !important;
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2)!important;
+}
+
+.package-payment-page .mat-grid-tile .mat-figure{
+	position: unset;
+}
+
+.mat-card{
+	-webkit-box-sizing: border-box;
+      box-sizing: border-box;
+}
+
+.mat-elevation-z8{
+	border:1px solid #ddd;;
+	-webkit-box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2) !important;
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2)!important;
+}
+
 
 
 
