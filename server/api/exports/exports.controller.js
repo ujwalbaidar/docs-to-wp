@@ -81,33 +81,53 @@ const filterHtmlObj = (htmlContent, userId)=>{
 		var images = $('*').children('img').map(function(){
 		    return $(this).attr('src');
 		}).get();
-		uploadWpMedia(images, userId)
-			.then(imageEl =>{
-				$('*').find('img').each(function(index){
-					if(imageEl[$(this).attr('src')]){
-						$(this).attr('src', imageEl[$(this).attr('src')])
-					}
-				});
+		if(images.length>0){
+			uploadWpMedia(images, userId)
+				.then(imageEl =>{
+					$('*').find('img').each(function(index){
+						if(imageEl[$(this).attr('src')]){
+							$(this).attr('src', imageEl[$(this).attr('src')])
+						}
+					});
 
-				let htmlElement = $.html();
+					let htmlElement = $.html();
 
-				htmlElement.replace(/<\/?span[^>]*>/g,"").replace(/[<]br[^>]*[>]/gi,"")
-				let opts = {
-				    'doctype': 'html5',
-				    'gdoc': true,
-				    'hideComments': false,
-				    'indent': false,
-				    'show-body-only': true,
-				    'wrap': 0,
-				    'anchor-as-name': false,
-				    'quote-nbsp': false,
-				    'drop-empty-elements': true,
-				    'drop-empty-paras': true
-				};
-				tidy(htmlElement, opts, (err, htmlData)=>{
-					resolve(htmlData);
+					htmlElement.replace(/<\/?span[^>]*>/g,"").replace(/[<]br[^>]*[>]/gi,"")
+					let opts = {
+					    'doctype': 'html5',
+					    'gdoc': true,
+					    'hideComments': false,
+					    'indent': false,
+					    'show-body-only': true,
+					    'wrap': 0,
+					    'anchor-as-name': false,
+					    'quote-nbsp': false,
+					    'drop-empty-elements': true,
+					    'drop-empty-paras': true
+					};
+					tidy(htmlElement, opts, (err, htmlData)=>{
+						resolve(htmlData);
+					});
 				});
+		}else{
+			let htmlElement = $.html();
+			htmlElement.replace(/<\/?span[^>]*>/g,"").replace(/[<]br[^>]*[>]/gi,"")
+			let opts = {
+			    'doctype': 'html5',
+			    'gdoc': true,
+			    'hideComments': false,
+			    'indent': false,
+			    'show-body-only': true,
+			    'wrap': 0,
+			    'anchor-as-name': false,
+			    'quote-nbsp': false,
+			    'drop-empty-elements': true,
+			    'drop-empty-paras': true
+			};
+			tidy(htmlElement, opts, (err, htmlData)=>{
+				resolve(htmlData);
 			});
+		}
 		
 	});
 }
