@@ -117,54 +117,63 @@ export class DocumentsComponent implements OnInit {
 		this.loading = true;
 		this.googleAuthService.exportGoogleDoc(data)
 			.subscribe(exportGoogleDocResp=>{
-				let tempDiv = document.createElement('div');
-				tempDiv.innerHTML = exportGoogleDocResp.data.htmlData;
-				let listSpans = tempDiv.getElementsByTagName('span');
-				let listatags = tempDiv.getElementsByTagName('a');
-				for(let i=0; i<listSpans.length; i++){
-					if(listSpans[i].style.fontWeight !== undefined && parseInt(listSpans[i].style.fontWeight)>500){
-						listSpans[i].innerHTML = `<strong>${listSpans[i].innerHTML}</strong>`;
-					}
-
-					if(listSpans[i].style.fontStyle !== undefined && listSpans[i].style.fontStyle === 'italic'){
-						listSpans[i].innerHTML = `<i>${listSpans[i].innerHTML}</i>`;
-					}
-
-					if(listSpans[i].style.textDecoration !== undefined && listSpans[i].style.textDecoration === 'underline'){
-						if(listSpans[i].firstElementChild === null){
-							listSpans[i].innerHTML = `<u>${listSpans[i].innerHTML}</u>`;
+				if(exportGoogleDocResp.success === true){
+					let tempDiv = document.createElement('div');
+					tempDiv.innerHTML = exportGoogleDocResp.data.htmlData;
+					let listSpans = tempDiv.getElementsByTagName('span');
+					let listatags = tempDiv.getElementsByTagName('a');
+					for(let i=0; i<listSpans.length; i++){
+						if(listSpans[i].style.fontWeight !== undefined && parseInt(listSpans[i].style.fontWeight)>500){
+							listSpans[i].innerHTML = `<strong>${listSpans[i].innerHTML}</strong>`;
 						}
-					}
-				}
 
-				for(let i=0; i<listatags.length; i++){
-					let aTagHashVal = listatags[i].hash;
-					let aTagHrefVal = listatags[i].href;
-					if(aTagHrefVal.includes('https://www.google.com/url?q=') === true){
-						listatags[i].href=aTagHrefVal.split('q=')[1];
-						if(listatags[i].href.includes("&sa=D&ust") && listatags[i].href.includes("&usg=")){
-							listatags[i].href = listatags[i].href.split("&sa=D&ust")[0];
+						if(listSpans[i].style.fontStyle !== undefined && listSpans[i].style.fontStyle === 'italic'){
+							listSpans[i].innerHTML = `<i>${listSpans[i].innerHTML}</i>`;
 						}
-					}
-					if(aTagHrefVal.includes("#cmnt") === true){
-						let aTagParentElement = listatags[i].parentElement;
-						let aTagParentElementTagName = aTagParentElement.tagName;
-						if(listatags[i].parentElement.tagName === 'SUP'){
-							listatags[i].parentElement.className = "remove_element";
-						}
-						while(aTagParentElementTagName !== 'DIV'){
-							aTagParentElement = aTagParentElement.parentElement;
-							if(aTagParentElement.tagName === 'DIV'){
-								break;
+
+						if(listSpans[i].style.textDecoration !== undefined && listSpans[i].style.textDecoration === 'underline'){
+							if(listSpans[i].firstElementChild === null){
+								listSpans[i].innerHTML = `<u>${listSpans[i].innerHTML}</u>`;
 							}
 						}
-						aTagParentElement.className = "remove_element";
 					}
+
+					for(let i=0; i<listatags.length; i++){
+						let aTagHashVal = listatags[i].hash;
+						let aTagHrefVal = listatags[i].href;
+						if(aTagHrefVal.includes('https://www.google.com/url?q=') === true){
+							listatags[i].href=aTagHrefVal.split('q=')[1];
+							if(listatags[i].href.includes("&sa=D&ust") && listatags[i].href.includes("&usg=")){
+								listatags[i].href = listatags[i].href.split("&sa=D&ust")[0];
+							}
+						}
+						if(aTagHrefVal.includes("#cmnt") === true){
+							let aTagParentElement = listatags[i].parentElement;
+							let aTagParentElementTagName = aTagParentElement.tagName;
+							if(listatags[i].parentElement.tagName === 'SUP'){
+								listatags[i].parentElement.className = "remove_element";
+							}
+							while(aTagParentElementTagName !== 'DIV'){
+								aTagParentElement = aTagParentElement.parentElement;
+								if(aTagParentElement.tagName === 'DIV'){
+									break;
+								}
+							}
+							aTagParentElement.className = "remove_element";
+						}
+					}
+					let removeElements = tempDiv.getElementsByClassName("remove_element");
+					while (removeElements.length > 0) removeElements[0].remove();
+					exportGoogleDocResp.data.htmlData = tempDiv.innerHTML.trim();
+					this.exportToWp(exportGoogleDocResp.data);
+				}else{
+					let snackBarRef = this.snackBar.open(exportGoogleDocResp.message, '',{
+						duration: 2000,
+					});
+					snackBarRef.afterDismissed().subscribe(() => {
+						window.location.reload();
+					});
 				}
-				let removeElements = tempDiv.getElementsByClassName("remove_element");
-				while (removeElements.length > 0) removeElements[0].remove();
-				exportGoogleDocResp.data.htmlData = tempDiv.innerHTML.trim();
-				this.exportToWp(exportGoogleDocResp.data);
 			}, error =>{
 					let errMsg = error.errBody.message || 'Failed to perform this action.';
 					let snackBarRef = this.snackBar.open(errMsg, '',{
@@ -195,17 +204,17 @@ export class DocumentsComponent implements OnInit {
 			}, error =>{
 				this.loading = false;
 				let errMsg = error.errBody.message || 'Failed to perform this action.';
-					let snackBarRef = this.snackBar.open(errMsg, '',{
-						duration: 2000,
-					});
-					snackBarRef.afterDismissed().subscribe(() => {
-						if(error.status === 401){
-							localStorage.removeItem('currentUser');
-							this.router.navigate(['/home']);
-						}else{
-							window.location.reload();
-						}
-					});
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 2000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					if(error.status === 401){
+						localStorage.removeItem('currentUser');
+						this.router.navigate(['/home']);
+					}else{
+						window.location.reload();
+					}
+				});
 			});
 	}
 

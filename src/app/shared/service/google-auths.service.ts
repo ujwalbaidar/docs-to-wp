@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/share';
 
 @Injectable()
 export class GoogleAuthsService {
@@ -20,7 +21,7 @@ export class GoogleAuthsService {
 
 	seachDocLists(query:any){
 		let params: URLSearchParams = new URLSearchParams();
-		for(let i=0;i<query.length;i++){
+		for(let i=0;i<query.length;i++){;
 			let key = Object.keys(query[i])[0];
 			let value = query[i][key];
 			params.set(key, value);
@@ -37,7 +38,8 @@ export class GoogleAuthsService {
 		let options = new RequestOptions({ headers: headers });
 		return this.http.post('/api/google-drive/exportDriveFile', docObj, options)
 			.map(this.extractData)
-			.catch(this.handleError);
+			.catch(this.handleError)
+			.share();
 	}
 
 	private extractData(res: Response) {
