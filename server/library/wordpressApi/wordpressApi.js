@@ -67,8 +67,10 @@ class WpApiLib {
 			let client = wordpress.createClient(wpOptions);
 			client.newPost(wpContent, (err,exportInfo)=>{
 				if(err){
+					console.log(err)
 					reject(err);
 				}else{
+					console.log(exportInfo)
 					resolve(exportInfo);
 				}
 			});

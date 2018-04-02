@@ -9,6 +9,7 @@ const Billings = mongoose.model('Billings');
 
 var wordpress = require( "wordpress" );
 var request = require('request').defaults({ encoding: null });
+const shortid = require('shortid');
 
 const getExportLists = (req, res)=>{
 	if(req.headers && req.headers.userId){
@@ -133,10 +134,11 @@ const uploadWpMedia = (mediaArray, userId)=>{
 						};
 
 						for(let i=0; i<mediaArray.length; i++){
-							let imageName = mediaArray[i].split('/').splice(-1,1)[0];
+							/*let imageName = mediaArray[i].split('/').splice(-1,1)[0];
 							if(mediaArray[i].indexOf("googleusercontent.com") > -1){
 								imageName = imageName+'.jpg';
-							}
+							}*/
+							let imageName = shortid.generate()+'.jpg';
 							getGoogleDocsImage(mediaArray[i])
 								.then(imageBuffer=>{
 									var client = wordpress.createClient(wpOptions);
@@ -152,7 +154,9 @@ const uploadWpMedia = (mediaArray, userId)=>{
 											imgArrIndex.push(i);
 										}else{
 											imgArrIndex.push(i);
-											imgObj[mediaArray[i]] = data.link;
+											if(imgObj[mediaArray[i]] == undefined){
+												imgObj[mediaArray[i]] = data.link;
+											}
 										}
 
 										if(imgArrIndex.length == mediaArray.length){
@@ -266,7 +270,6 @@ const updateUserBilling = (updateQuery, updateObj)=>{
 			if(err){
 				reject(err);
 			}else{
-				console.log()
 				resolve(billingUpdateResp);
 			}
 		});

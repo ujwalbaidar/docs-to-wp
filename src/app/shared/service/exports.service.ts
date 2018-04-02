@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/share';
 
 @Injectable()
 export class ExportsService {
@@ -25,7 +26,8 @@ export class ExportsService {
 		let options = new RequestOptions({ headers: headers });
 		return this.http.post('/api/exports/exportDocToWp', exportElement, options)
 			.map(this.extractData)
-			.catch(this.handleError);
+			.catch(this.handleError)
+			.share();
 	}
 
 	private extractData(res: Response) {
