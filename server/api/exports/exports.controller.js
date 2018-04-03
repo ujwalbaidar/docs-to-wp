@@ -10,6 +10,7 @@ const Billings = mongoose.model('Billings');
 var wordpress = require( "wordpress" );
 var request = require('request').defaults({ encoding: null });
 const shortid = require('shortid');
+const Jimp = require("jimp");
 
 const getExportLists = (req, res)=>{
 	if(req.headers && req.headers.userId){
@@ -190,6 +191,10 @@ const uploadWpMedia = (mediaArray, userId)=>{
 	});
 }
 
+/**
+* if need original quality use request module
+* else increase or decrease quality using Jimp module
+**/
 const getGoogleDocsImage = (imageUrl)=> {
 	return new Promise((resolve)=>{
 		request.get(imageUrl, (err, res, body) => {
@@ -199,6 +204,20 @@ const getGoogleDocsImage = (imageUrl)=> {
 				resolve(imageUrl)
 			}
 		});
+		
+		/*Jimp.read(imageUrl, (err, image)=>{
+			if(err){
+				resolve(imageUrl);
+			}else{
+				image.quality(60).getBuffer(Jimp.MIME_JPEG, (err, bufferData)=>{
+					if(err){
+						resolve(imageUrl);
+					}else{
+						resolve(bufferData);
+					}
+				})
+			}
+		});*/
 	});
 }
 
