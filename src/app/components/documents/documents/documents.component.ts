@@ -143,7 +143,7 @@ export class DocumentsComponent implements OnInit {
 						let aTagHrefVal = listatags[i].href;
 						if(aTagHrefVal.includes('https://www.google.com/url?q=') === true){
 							listatags[i].href=aTagHrefVal.split('q=')[1];
-							if(listatags[i].href.includes("&sa=D&ust") && listatags[i].href.includes("&usg=")){
+							if(listatags[i].href.includes("&sa=D&ust")){
 								listatags[i].href = listatags[i].href.split("&sa=D&ust")[0];
 							}
 						}

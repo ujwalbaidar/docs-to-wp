@@ -42,7 +42,7 @@ const exportDocToWp = (req, res)=>{
 	if(req.headers && req.headers.userId){
 		let docObj = req.body;
 		let userId = req.headers.userId;
-		filterHtmlObj(req.body.htmlData, userId)
+		filterHtmlObj(req.body.htmlData, userId, docObj)
 			.then(htmlText=>{
 				createWpPost(userId, docObj, htmlText)
 					.then((createPostResp) => {
@@ -73,7 +73,7 @@ const exportDocToWp = (req, res)=>{
 	}
 }
 
-const filterHtmlObj = (htmlContent, userId)=>{
+const filterHtmlObj = (htmlContent, userId, docObj)=>{
 	return new Promise((resolve, reject)=>{
 		var $ = cheerio.load(htmlContent, {ignoreWhitespace: true, useHtmlParser2: true});
 		$('*').removeAttr('style');
@@ -83,7 +83,7 @@ const filterHtmlObj = (htmlContent, userId)=>{
 		    return $(this).attr('src');
 		}).get();
 		if(images.length>0){
-			uploadWpMedia(images, userId)
+			uploadWpMedia(images, userId, docObj)
 				.then(imageEl =>{
 					$('*').find('img').each(function(index){
 						if(imageEl[$(this).attr('src')]){
@@ -133,7 +133,7 @@ const filterHtmlObj = (htmlContent, userId)=>{
 	});
 }
 
-const uploadWpMedia = (mediaArray, userId)=>{
+const uploadWpMedia = (mediaArray, userId, docObj)=>{
 	let imgArrIndex = [];
 	let imgObj = {};
 	return new Promise((resolve, reject) => {
@@ -146,6 +146,11 @@ const uploadWpMedia = (mediaArray, userId)=>{
 				};
 				
 				let cryptoLib = new CryptoLib(cryptoObj);
+				
+				if(docObj.wpAccount !== undefined && JSON.stringify(docObj.wpAccount) !== '{}'){
+					wpUserInfo[0] = docObj.wpAccount;
+				}
+
 				cryptoLib.decryptString(wpUserInfo[0]['wpPassword'])
 					.then(decryptedPassword=>{
 						let wpOptions = {
