@@ -52,14 +52,7 @@ const getWpUserInfo = (req, res)=>{
 const createWpUser = (req, res)=>{
 	if(req.headers && req.headers.userId){
 		let userUrl = req.body.url;
-		let splitUserUrl = userUrl.split('://');
-		if(splitUserUrl.length>1){
-			let userWpDomain = splitUserUrl[1];
-			if(userWpDomain.indexOf('/')>-1){
-				let splituserWpDomain = userWpDomain.split('/');
-				req.body.url = `${splitUserUrl[0]}://${splituserWpDomain[0]}`;
-			}
-		}
+		
 		getUserBilling({userId: req.headers.userId}, {_id: 0, selectedProduct: 1, totalWpUrls: 1, totalExports: 1})
 			.then(billingInfo=>{
 				let userBilling = billingInfo[0];
@@ -73,6 +66,23 @@ const createWpUser = (req, res)=>{
 					let cryptoLib = new CryptoLib(cryptoObj);
 					cryptoLib.encryptString(req.body.password)
 						.then(encryptedPassword=>{
+							let splitUserUrl = userUrl.split('://');
+							if(splitUserUrl.length>1){
+								let userWpDomain = splitUserUrl[1];
+								let splitWpUserDomain = userWpDomain.split('/');
+
+								if(splitWpUserDomain.length>1){
+									if(splitWpUserDomain[1] === '' || splitWpUserDomain[1] === null || splitWpUserDomain[1] === undefined){
+										req.body.url = `${splitUserUrl[0]}://${splitWpUserDomain[0]}`;
+									}else{
+										req.body.url = `${splitUserUrl[0]}://${splitWpUserDomain[0]}/${splitWpUserDomain[1]}`;
+									}
+								}
+								// if(userWpDomain.indexOf('/')>-1){
+								// 	let splituserWpDomain = userWpDomain.split('/');
+								// 	req.body.url = `${splitUserUrl[0]}://${splituserWpDomain[0]}`;
+								// }
+							}
 							let wpOptions = {
 								url: req.body.url,
 								username: req.body.userName,
@@ -110,7 +120,8 @@ const createWpUser = (req, res)=>{
 										
 								})
 								.catch(wpPostsErr=>{
-									res.status(wpPostsErr.code).json({success:false, data: wpPostsErr, message: 'Failed to varify wordpress account.'});
+									let errorCode = wpPostsErr.code?wpPostsErr.code:400;
+									res.status(errorCode).json({success:false, data: wpPostsErr, message: 'Failed to varify wordpress account.'});
 								});
 						});
 				}else{
@@ -128,13 +139,29 @@ const createWpUser = (req, res)=>{
 const updateWpUser = (req, res)=>{
 	if(req.headers && req.headers.userId){
 		let userUrl = req.body.wpUrl;
-		let splitUserUrl = userUrl.split('://');
-		if(splitUserUrl.length>1){
+		/*if(splitUserUrl.length>1){
 			let userWpDomain = splitUserUrl[1];
 			if(userWpDomain.indexOf('/')>-1){
 				let splituserWpDomain = userWpDomain.split('/');
 				req.body.wpUrl = `${splitUserUrl[0]}://${splituserWpDomain[0]}`;
 			}
+		}*/
+		let splitUserUrl = userUrl.split('://');
+		if(splitUserUrl.length>1){
+			let userWpDomain = splitUserUrl[1];
+			let splitWpUserDomain = userWpDomain.split('/');
+
+			if(splitWpUserDomain.length>1){
+				if(splitWpUserDomain[1] === '' || splitWpUserDomain[1] === null || splitWpUserDomain[1] === undefined){
+					req.body.url = `${splitUserUrl[0]}://${splitWpUserDomain[0]}`;
+				}else{
+					req.body.url = `${splitUserUrl[0]}://${splitWpUserDomain[0]}/${splitWpUserDomain[1]}`;
+				}
+			}
+			// if(userWpDomain.indexOf('/')>-1){
+			// 	let splituserWpDomain = userWpDomain.split('/');
+			// 	req.body.url = `${splitUserUrl[0]}://${splituserWpDomain[0]}`;
+			// }
 		}
 		let wpApiLib = new WpApiLib();
 		let wpOptions = {
