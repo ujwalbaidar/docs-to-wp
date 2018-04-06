@@ -15,7 +15,7 @@ export class DomainDetailsComponent implements OnInit {
 	userDomainInfo:any;
 	displayedColumns:any;
 
-	constructor(private route: ActivatedRoute, private router: Router, public userService: UserService) {
+	constructor(private route: ActivatedRoute, private router: Router, public userService: UserService, public snackBar: MatSnackBar) {
 	}
 
 	ngOnInit() {
@@ -35,7 +35,18 @@ export class DomainDetailsComponent implements OnInit {
 				this.displayedColumns = ['domainName', 'exportedData', 'userDomain'];
 				this.userDomainInfo = new DomainDataDataSource(userDomainLists.data);
 			}, error=>{
-				debugger;
+				let errMsg = error.errBody.message || 'Failed to perform this action.';
+				let snackBarRef = this.snackBar.open(errMsg, '',{
+					duration: 3000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					if(error.status === 401){
+						localStorage.removeItem('currentUser');
+						this.router.navigate(['/home']);
+					}else{
+						window.location.reload();
+					}
+				});
 			})
 	}
 }
