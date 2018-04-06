@@ -1,0 +1,32 @@
+<div class="domain-lists">
+	<div>
+		<h4>Domain Infromations</h4>
+	</div>
+	<div class="domain-list-container mat-elevation-z8">
+		<mat-table #table [dataSource]="userDomainInfo">
+			<ng-container matColumnDef="domainName">
+				<mat-header-cell *matHeaderCellDef> Domains </mat-header-cell>
+				<mat-cell *matCellDef="let domainData">
+					{{domainData.domainName}}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="exportedData">
+				<mat-header-cell *matHeaderCellDef> Total Exports </mat-header-cell>
+				<mat-cell *matCellDef="let domainData">
+					{{domainData.exportedData}}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="userDomain">
+				<mat-header-cell *matHeaderCellDef> Created On </mat-header-cell>
+				<mat-cell *matCellDef="let domainData">
+					{{domainData.userDomain[0]['createdDate']|date}}
+				</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</mat-table>
+	</div>
+</div>

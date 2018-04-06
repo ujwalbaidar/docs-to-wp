@@ -50,16 +50,7 @@ const getWpUserInfo = (req, res)=>{
 }
 
 const createWpUser = (req, res)=>{
-	if(req.headers && req.headers.userId){
-		let userUrl = req.body.url;
-		let splitUserUrl = userUrl.split('://');
-		if(splitUserUrl.length>1){
-			let userWpDomain = splitUserUrl[1];
-			if(userWpDomain.indexOf('/')>-1){
-				let splituserWpDomain = userWpDomain.split('/');
-				req.body.url = `${splitUserUrl[0]}://${splituserWpDomain[0]}`;
-			}
-		}
+	if(req.headers && req.headers.userId){		
 		getUserBilling({userId: req.headers.userId}, {_id: 0, selectedProduct: 1, totalWpUrls: 1, totalExports: 1})
 			.then(billingInfo=>{
 				let userBilling = billingInfo[0];
@@ -73,45 +64,38 @@ const createWpUser = (req, res)=>{
 					let cryptoLib = new CryptoLib(cryptoObj);
 					cryptoLib.encryptString(req.body.password)
 						.then(encryptedPassword=>{
-							let wpOptions = {
-								url: req.body.url,
-								username: req.body.userName,
-								password: req.body.password
-							};
+							checkWpUserPost(req.body)
+								.then(wpOptionsObj=>{
+									if(JSON.stringify(wpOptionsObj) === '{}'){
+										res.status(400).json({success:false, data: {}, message: 'Failed to varify wordpress account. Domain or Username/Password missmatch!'});
+									}else{
+										let saveObj = {
+											wpUrl: wpOptionsObj.url,
+											wpUserName: req.body.userName,
+											wpPassword: encryptedPassword,
+											status: true,
+											wpUserId: req.headers.userId,
+											shortWpId: shortid.generate()
+										};
 
-							wpApiLib.getWpUserProfile(wpOptions)
-								.then(wpPosts=>{
-									let saveObj = {
-										wpUrl: req.body.url,
-										wpUserName: req.body.userName,
-										wpPassword: encryptedPassword,
-										status: true,
-										wpUserId: req.headers.userId,
-										shortWpId: shortid.generate()
-									};
-
-									saveWpUser(saveObj)
-										.then(wpUserInfo=>{
-											let updateObj = {
-												updateDate: new Date(),
-												$inc: {totalWpUrls: 1}
-											};
-											updateUserBilling({userId: req.headers.userId}, updateObj)
-												.then(billingUpdateResp=>{
-														res.status(200).json({success: true, data: wpUserInfo, message: 'Wordpress User created successfully.'});
-													})
-												.catch(billingUpdateErr=>{
-													res.status(400).json({success: false, data: billingUpdateErr, message: 'Failed to update billings'});
-												});
-										})
-										.catch(wpUserInfoErr=>{
-											res.status(400).json({success: false, data: wpUserInfoErr, message: 'Failed to save wordpress user.'});
-										});
-										
-								})
-								.catch(wpPostsErr=>{
-									let errorCode = wpPostsErr.code?wpPostsErr.code:400;
-									res.status(errorCode).json({success:false, data: wpPostsErr, message: 'Failed to varify wordpress account.'});
+										saveWpUser(saveObj)
+											.then(wpUserInfo=>{
+												let updateObj = {
+													updateDate: new Date(),
+													$inc: {totalWpUrls: 1}
+												};
+												updateUserBilling({userId: req.headers.userId}, updateObj)
+													.then(billingUpdateResp=>{
+															res.status(200).json({success: true, data: wpUserInfo, message: 'Wordpress User created successfully.'});
+														})
+													.catch(billingUpdateErr=>{
+														res.status(400).json({success: false, data: billingUpdateErr, message: 'Failed to update billings'});
+													});
+											})
+											.catch(wpUserInfoErr=>{
+												res.status(400).json({success: false, data: wpUserInfoErr, message: 'Failed to save wordpress user.'});
+											});
+									}
 								});
 						});
 				}else{
@@ -126,56 +110,85 @@ const createWpUser = (req, res)=>{
 	}
 }
 
-const updateWpUser = (req, res)=>{
-	if(req.headers && req.headers.userId){
-		let userUrl = req.body.wpUrl;
+const checkWpUserPost = (reqBody) => {
+	let loopIndexArr = [];
+	let matchWpOptions = {};
+
+	return new Promise(resolve=>{
+		let userUrl = reqBody.url||reqBody.wpUrl;
 		let splitUserUrl = userUrl.split('://');
 		if(splitUserUrl.length>1){
 			let userWpDomain = splitUserUrl[1];
-			if(userWpDomain.indexOf('/')>-1){
-				let splituserWpDomain = userWpDomain.split('/');
-				req.body.wpUrl = `${splitUserUrl[0]}://${splituserWpDomain[0]}`;
+			let splitUserWpDomain = userWpDomain.split('/');
+			for(let i=(splitUserWpDomain.length - 1); i>=0; i--){
+				let arrayData = JSON.parse(JSON.stringify(splitUserWpDomain));
+				arrayData.length = i + 1;
+				let joinUrl = arrayData.join('/');
+				
+				let wpOptions = {
+					url: `${splitUserUrl[0]}://${joinUrl}`.trim(),
+					username: reqBody.userName || reqBody.wpUserName,
+					password: reqBody.password || reqBody.wpPassword
+				};
+
+				let wpApiLib = new WpApiLib();
+				wpApiLib.getWpUserProfile(wpOptions)
+					.then(wpPosts=>{
+						loopIndexArr.push(i);
+						if(wpPosts){
+							matchWpOptions = wpOptions;
+						}
+	
+						if(loopIndexArr.length === splitUserWpDomain.length){
+							resolve(matchWpOptions);
+						}
+					})
+					.catch(wpPostsErr=>{
+						loopIndexArr.push(i);
+						if(loopIndexArr.length === splitUserWpDomain.length){
+							resolve(matchWpOptions);
+						}
+					});
 			}
 		}
-		let wpApiLib = new WpApiLib();
-		let wpOptions = {
-			url: req.body.wpUrl,
-			username: req.body.wpUserName,
-			password: req.body.wpPassword
-		};
+	});
+}
 
-		wpApiLib.getWpUserProfile(wpOptions)
-			.then(wpPosts=>{
-				let cryptoObj = {
-					cryptoAlgorithm: config['wp']['cryptoAlgorithm'],
-					cryptoSecret: config['wp']['cryptoSecret']
-				};
-				let cryptoLib = new CryptoLib(cryptoObj);
-				cryptoLib.encryptString(req.body.wpPassword)
-					.then(encryptedPassword=>{
-						let updateQuery = {
-							wpUserId: req.headers.userId,
-							shortWpId: req.body.shortWpId
-						};
+const updateWpUser = (req, res)=>{
+	if(req.headers && req.headers.userId){
+		checkWpUserPost(req.body)
+			.then(wpOptionsObj=>{
+				if(JSON.stringify(wpOptionsObj) === '{}'){
+					res.status(400).json({success:false, data: {}, message: 'Failed to varify wordpress account. Domain or Username/Password missmatch!'});
+				}else{
+					let cryptoObj = {
+						cryptoAlgorithm: config['wp']['cryptoAlgorithm'],
+						cryptoSecret: config['wp']['cryptoSecret']
+					};
+					let cryptoLib = new CryptoLib(cryptoObj);
+					cryptoLib.encryptString(req.body.wpPassword)
+						.then(encryptedPassword=>{
+							let updateQuery = {
+								wpUserId: req.headers.userId,
+								shortWpId: req.body.shortWpId
+							};
+							
+							let updateObj = {
+								wpUrl: wpOptionsObj.url,
+								wpUserName: req.body.wpUserName,
+								wpPassword: encryptedPassword,
+								updateDate: new Date()
+							};
 
-						let updateObj = {
-							wpUrl: req.body.wpUrl,
-							wpUserName: req.body.wpUserName,
-							wpPassword: encryptedPassword,
-							updateDate: new Date()
-						};
-
-						WpUser.update(updateQuery, updateObj, (err, updateResp)=>{
-							if(err){
-								res.status(400).json({success:false, data: err, message: 'Failed to update wordpress user data.'})
-							}else{
-								res.status(200).json({success:true, data: req.body, message:'Wordpress users has been updated successfully.'});
-							}
+							WpUser.update(updateQuery, updateObj, (err, updateResp)=>{
+								if(err){
+									res.status(400).json({success:false, data: err, message: 'Failed to update wordpress user data.'})
+								}else{
+									res.status(200).json({success:true, data: req.body, message:'Wordpress users has been updated successfully.'});
+								}
+							});
 						});
-					});
-			})
-			.catch(wpPostsErr=>{
-				res.status(wpPostsErr.code).json({success:false, data: wpPostsErr, message: 'Failed to varify account.'});
+				}
 			});
 	}else{
 		res.status(401).json({success:false, data: {}, message: 'Login is Required!'});

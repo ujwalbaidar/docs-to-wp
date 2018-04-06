@@ -30,6 +30,7 @@ export const routes = [
 			{ path: 'admin-packages', loadChildren: '../components/admin-packages/admin-packages.module#AdminPackagesModule' },
 			{ path: 'admin-users', loadChildren: '../components/admin-users/admin-users.module#AdminUsersModule' },
 			{ path: 'admin-user-billing', loadChildren: '../components/admin-user-billing/admin-user-billing.module#AdminUserBillingModule' },
+			{ path: 'wp-details', loadChildren: '../components/wp-details/wp-details.module#WpDetailsModule' },
 			{ path: 'billing', loadChildren: '../components/billings/billings.module#BillingsModule'}
 		]
 	},

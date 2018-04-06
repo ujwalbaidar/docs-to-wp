@@ -9,5 +9,5 @@ router.post('/adminUser', usersController.createAdminUser);
 router.post('/adminLogin', usersController.adminLogin);
 router.post('/validateAuthCode', usersController.validateAuthCode);
 router.put('/updateUserInfo', usersController.updateUserInfo);
-
+router.get('/listUserDomains', usersController.listUserDomains);
 module.exports = router;
