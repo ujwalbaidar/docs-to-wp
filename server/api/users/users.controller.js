@@ -2,6 +2,7 @@ const GoogleOauthAuthLib = require('../../library/googleApi/googleOAuth');
 const GoogleDriveLib = require('../../library/googleApi/googleDrive');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const WpUser = mongoose.model('WpUser');
 const Billings = mongoose.model('Billings');
 const Packages = mongoose.model('Package');
 const jwt = require('jsonwebtoken');
@@ -401,6 +402,82 @@ const listUsers = (req, res)=>{
 	}
 }
 
+const listUserDomains = (req, res)=>{
+	if(req.headers && parseInt(req.headers.role) === 30){
+		let queryUserId = req.query.userId;
+		
+		WpUser.aggregate([
+		    {
+		        $match:{
+		            wpUserId: queryUserId
+		        }
+		    },
+		    {
+		        $group:{
+		            _id: "$wpUrl",
+		            userDomain: {$push: "$$ROOT"}
+		        }
+		    },
+		    {
+		        $project: {
+		            _id: 0,
+		            domainName: "$_id",
+		            userDomain: 1
+		        }
+		    },
+		    {
+		        $lookup: {
+		            from:'exports',
+		            let: { domain_name: "$domainName"},
+		            pipeline: [
+		                {
+		                    $match:{
+		                        $expr:{
+		                            $and: [
+		                                { $eq: ["$wpUrl", "$$domain_name"] },
+		                                { $eq: ["$userId", queryUserId]}
+		                            ]
+		                        }
+		                    }
+		                    
+		                },
+		                {
+		                    $project:{
+		                        _id: 0,
+		                        "userId" : 0,
+		                        "docFileId" : 0,
+		                        "docFileTitle" :0,
+		                        "wpId" : 0,
+		                        "wpType" : 0,
+		                        "publishType" : 0,
+		                        "updateDate" : 0,
+		                        "createdDate" : 0,
+		                        "__v" : 0
+		                    }
+		                }
+		            ],
+		            as: 'exportedData'
+		        }
+		    },
+		    {
+		        $project: {
+		            userDomain: 1,
+		            domainName: 1,
+		            exportedData: { $size: "$exportedData" }
+		        }
+		    }
+]).exec((wpuserDomainErr, wpuserDomain)=>{
+			if(wpuserDomainErr){
+				res.status(400).json({success: false, data: wpuserDomainErr, message: 'Failed to retrieve user domain data.'});
+			}else{
+				res.status(200).json({success: true, data: wpuserDomain, message: 'User Domain Data retrieved succcessfully.'});
+			}
+		});
+	}else{
+		res.status(401).json({success:false, data: {}, message: 'You are not authorized for this request.'});
+	}
+}
+
 module.exports = {
 	createAdminUser,
 	adminLogin,
@@ -408,5 +485,6 @@ module.exports = {
 	validateAuthCode,
 	getUserInfo,
 	updateUserInfo,
-	listUsers
+	listUsers,
+	listUserDomains
 }
