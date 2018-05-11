@@ -8,4 +8,8 @@ router.get('/billingPackages', packagesController.getBillingPackages);
 router.post('/adminPackage', packagesController.saveAdminPackages);
 router.put('/adminPackage', packagesController.updateAdminPackages);
 
+router.get('/listBillingPlans', packagesController.listBillingPlans);
+router.get('/createBillingPlans', packagesController.createBillingPlans);
+router.get('/billingSuccess', packagesController.billingSuccess);
+router.get('/billingCancel', packagesController.billingCancel);
 module.exports = router;

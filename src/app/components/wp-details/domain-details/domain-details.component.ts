@@ -31,7 +31,6 @@ export class DomainDetailsComponent implements OnInit {
 	wpUserDomains(userId){
 		this.userService.wpUserDomains([{userId:userId}])
 			.subscribe(userDomainLists=>{
-				console.log(userDomainLists.data)
 				this.displayedColumns = ['domainName', 'exportedData', 'userDomain'];
 				this.userDomainInfo = new DomainDataDataSource(userDomainLists.data);
 			}, error=>{

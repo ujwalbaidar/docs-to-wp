@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 let PackageSchema = new mongoose.Schema({
 	shortPackageId: String,
-	monthlyProductId: String,
-	yearlyProductId: String,
+	monthlyTCOProductId: String,
+	yearlyTCOProductId: String,
+	monthlyPaypalBillingId: String,
+	yearlyPaypalBillingId: String,
+	monthlyPaddleProductId: String,
+	yearlyPaddleProductId: String,
 	name: String,
 	description: String,
 	cost: Number,

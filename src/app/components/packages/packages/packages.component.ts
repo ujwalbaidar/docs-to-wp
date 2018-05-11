@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { PackagesService } from '../../../shared/service/packages.service';
 import { BillingsService } from '../../../shared/service/billings.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
 	selector: 'app-packages',
@@ -18,7 +19,8 @@ export class PackagesComponent implements OnInit {
 		private activatedRoute: ActivatedRoute, 
 		private router: Router, 
 		public snackBar: MatSnackBar,
-		public billingService: BillingsService
+		public billingService: BillingsService,
+		public dialog: MatDialog
 	) { }
 
 	ngOnInit() {
@@ -45,22 +47,45 @@ export class PackagesComponent implements OnInit {
 	}
 
 	getCheckoutUrl(packageInfo){
-		if(this.checked === true){
-			var productId = packageInfo.monthlyProductId;
-		}else{
-			var productId = packageInfo.yearlyProductId;
-		}
-		this.packagesService.getCheckoutUrl([{productId:productId}])
-			.subscribe(checkoutUrl=>{
-				if(checkoutUrl.success === true){
-					window.location.href = checkoutUrl.data;
+		let dialogRef = this.dialog.open(PaymentTypeSelectDialog, {
+			width: '500px'
+    	});
+
+	    dialogRef.afterClosed().subscribe(result => {
+			if(result && result.cancel === false){
+				if(this.checked === true){
+					var payBill = 'monthly';
+					if(result.paymentType === 'paypal'){
+						var productId = packageInfo.monthlyPaypalBillingId;
+					}else if(result.paymentType === 'paddle'){
+						var productId = packageInfo.monthlyPaddleProductId;
+					}else{
+						var productId = packageInfo.monthlyTCOProductId;
+					}
 				}else{
-					let msg = checkoutUrl.message;
-					let snackBarRef = this.snackBar.open(msg, '',{
-						duration: 3000,
-					});
+					var payBill = 'yearly';
+					if(result.paymentType === 'paypal'){
+						var productId = packageInfo.yearlyPaypalBillingId;
+					}else if(result.paymentType === 'paddle'){
+						var productId = packageInfo.yearlyPaddleProductId;
+					}else{
+						var productId = packageInfo.yearlyTCOProductId
+					}
 				}
-			});
+
+				this.packagesService.getCheckoutUrl([{productId:productId}, {paymentMethod: result.paymentType}, {payBill: payBill}])
+					.subscribe(checkoutUrl=>{
+						if(checkoutUrl.success === true){
+							window.location.href = checkoutUrl.data;
+						}else{
+							let msg = checkoutUrl.message;
+							let snackBarRef = this.snackBar.open(msg, '',{
+								duration: 3000,
+							});
+						}
+					});
+			}
+	    });
 	}
 
 	saveBilling(tcoParams){
@@ -115,3 +140,29 @@ export class PackagesComponent implements OnInit {
 }
 
 
+@Component({
+	selector: 'payment-type-select-dialog',
+	templateUrl: 'payment-type-select-dialog.html',
+})
+export class PaymentTypeSelectDialog {
+	selectedPayment: string;
+	paymentMethods = [
+		{ name: 'Two Checkout', value: 'twoCheckout'},
+		{ name: 'Paypal', value: 'paypal'},
+		{ name: 'Paddle', value: 'paddle'},
+	];
+	constructor(
+		public dialogRef: MatDialogRef<PaymentTypeSelectDialog>,
+		@Inject(MAT_DIALOG_DATA) public data: any
+	) {
+		this.selectedPayment = this.paymentMethods[0]['value'];
+	}
+
+	cancelSubmit(): void {
+		this.dialogRef.close({ cancel:true, paymentType: {} });
+	}
+
+	submitPaymentMethod(){
+		this.dialogRef.close({ cancel:false, paymentType: this.selectedPayment });
+	}
+}

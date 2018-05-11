@@ -47,7 +47,22 @@
 		"demo": false,
 		"sandbox": false
 	},
+	"paypal":{
+		"email_account": "dev.codewing@gmail.com",
+		"email_password": "ujw@1codewings",
+		"mode": "sandbox",
+		"paypal_email": "dev.codewing@gmail.com",
+		"paypal_password": "ujw@1codewings",
+		"client_id": "AfI6d9wTxV519v5OI08omQE7HX9XI6-h3AopzKAiP5Yk2nO6brKaTJH8DyeAwpRpLI0CjGtQVSS737eS",
+		"client_secret": "EP8j0XiZkkVysuYRT9gZUsuLjB_Vaz-CGZIZ1EoovzBAPlifW55TKbx_X-WF9XK0z7ZIK-Ntw2oS7jwo"
+	},
+	"paddle":{
+		"vendor_id":"31037",
+		"default_api_key": "c086e429bec917040c9057b629218b2569e4821cad879e2bb2",
+		"app_api_key": "21a8960ba9ee01ad9ae77a5b9eff4ec960d38b1b17dd54de49"
+	},
 	"activateAccount":{
+		"mode": "sandbox",
 		"secretKey":"c0d3w1ngR3g15ter!!",
 		"expireTime": "1d",
 		"algorithm": "HS256"

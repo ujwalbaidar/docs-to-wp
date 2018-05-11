@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PackagesComponent } from './packages/packages.component';
+import { PackagesComponent, PaymentTypeSelectDialog } from './packages/packages.component';
 import { SharedModule } from '../../shared/shared.module';
 import { Routes, RouterModule } from '@angular/router';
+import { FormsModule }   from '@angular/forms';
 
 const routes: Routes = [
 	{ path: '', component: PackagesComponent },
@@ -21,8 +22,10 @@ const routes: Routes = [
 	imports: [
 		CommonModule,
 		SharedModule,
-		RouterModule.forChild(routes)
+		RouterModule.forChild(routes),
+		FormsModule
 	],
-	declarations: [PackagesComponent]
+	declarations: [PackagesComponent, PaymentTypeSelectDialog],
+	entryComponents: [PaymentTypeSelectDialog]
 })
 export class PackagesModule { }

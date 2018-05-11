@@ -1,0 +1,14 @@
+<div mat-dialog-content>
+	<div>
+		<p>Plese select the payment gateway.</p>
+	</div>
+	<mat-radio-group class="payment-radio-group" [(ngModel)]="selectedPayment">
+		<mat-radio-button class="payment-radio-button" *ngFor="let paymentMethod of paymentMethods" [value]="paymentMethod.value">
+	    	{{paymentMethod.name}}
+	  	</mat-radio-button>
+	</mat-radio-group>
+</div>
+<div mat-dialog-actions>
+	<button mat-button (click)="submitPaymentMethod()">Submit</button>
+	<button mat-button (click)="cancelSubmit()">Cancel</button>
+</div>
